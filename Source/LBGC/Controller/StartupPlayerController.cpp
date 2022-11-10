@@ -83,11 +83,36 @@ void AStartupPlayerController::ConnectToServer()
 				m_HUDStartup->SetTip(info);
 				m_HUDStartup->SetWaitngShow(false);
 			}
+
+			if (LBGC_INSTANCE->GetTcpClient())
+			{
+				LBGC_INSTANCE->GetTcpClient()->SetConnectedFlag(ok);
+			}
+
+			if (ok)
+			{
+				OnConnectServerOk();
+			}
 		});
 	if (LBGC_INSTANCE->GetTcpClient())
 	{
 		LBGC_INSTANCE->GetTcpClient()->Connect(TEXT("127.0.0.1"), 4510, cd);
 	}
+}
+
+void AStartupPlayerController::OnConnectServerOk_Implementation()
+{
+	if (!LBGC_INSTANCE)
+	{
+		return;
+	}
+	if (!LBGC_INSTANCE->GetTcpClient())
+	{
+		return;
+	}
+
+	LBGC_INSTANCE->GetTcpClient()->StartRead();
+	LBGC_INSTANCE->GetTcpClient()->StartSendHeart();
 }
 
 void AStartupPlayerController::SwitchHUDToStartUp()

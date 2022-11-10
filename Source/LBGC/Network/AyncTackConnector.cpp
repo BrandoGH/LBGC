@@ -28,7 +28,9 @@ void AyncTaskConnector::DoWork()
 		return;
 	}
 	UTcpClient* tcpClient = LBGC_INSTANCE->GetTcpClient();
-	if (!tcpClient || !tcpClient->GetSocket())
+	if (!tcpClient || 
+		!tcpClient->GetSocket() ||
+		tcpClient->IsConnect())
 	{
 		return;
 	}

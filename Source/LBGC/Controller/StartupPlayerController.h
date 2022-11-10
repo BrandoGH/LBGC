@@ -33,6 +33,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AStartupPlayerController Func")
 		void OnlineClick();
 
+	UFUNCTION(BlueprintNativeEvent, Category = "AStartupPlayerController Func")
+		void OnConnectServerOk();
+
 private:
 	void InitFromBeginPlay();
 	void ConnectToServer();

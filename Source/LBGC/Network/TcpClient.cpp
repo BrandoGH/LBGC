@@ -8,14 +8,22 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "Networking/Public/Common/TcpSocketBuilder.h"
 #include "../MsgModule/MsgCommon.h"
 #include "AyncTackConnector.h"
+#include "AyncTaskReader.h"
+#include "AyncTaskSender.h"
 
 UTcpClient::UTcpClient()
 	: m_pSocketClient(NULL)
+	, m_bConnected(false)
+	, m_bWillDestroy(false)
 {
+	m_dgReader.BindUObject(this, &UTcpClient::OnMsgRead);
 }
 
 UTcpClient::~UTcpClient()
 {
+	m_bWillDestroy = true;
+	// wait other thread op done (send/read)
+	FWindowsPlatformProcess::Sleep(1.F);
 	CloseSocket();
 }
 
@@ -61,4 +69,22 @@ void UTcpClient::ShutdownWrite()
 	{
 		m_pSocketClient->Shutdown(ESocketShutdownMode::Write);
 	}
+}
+
+void UTcpClient::StartRead()
+{
+	FAsyncTask<AyncTaskReader>* TaskReader = new FAsyncTask<AyncTaskReader>(m_dgReader);
+	TaskReader->StartBackgroundTask();
+}
+
+void UTcpClient::StartSendHeart()
+{
+	FAsyncTask<AyncTaskSender>* TaskSender = new FAsyncTask<AyncTaskSender>(1);
+	TaskSender->StartBackgroundTask();
+}
+
+void UTcpClient::OnMsgRead(const TArray<uint8>& msg)
+{
+	UE_LOG(LogTemp, Warning, TEXT("read data"));
+
 }

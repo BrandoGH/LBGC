@@ -7,6 +7,8 @@
 #include "TcpClient.generated.h"
 
 DECLARE_DELEGATE_TwoParams(FClientConnectDelegate, bool /*ok*/, const FString& /*info*/);
+DECLARE_DELEGATE_OneParam(FMsgReaderDelegate, const TArray<uint8>& /*msg*/);
+
 /**
  * 
  */
@@ -26,7 +28,19 @@ public:
 	void ShutdownRead();
 	void ShutdownWrite();
 	class FSocket* GetSocket() { return m_pSocketClient; }
+	void SetConnectedFlag(bool bConnected) { m_bConnected = bConnected; }
+	bool IsConnect() { return m_bConnected; }
+	bool IsWillDestroy() { return m_bWillDestroy; };
+
+	void StartRead();
+	void StartSendHeart();
+
+private:
+	void OnMsgRead(const TArray<uint8>& msg);
 
 private:
 	class FSocket* m_pSocketClient;
+	bool m_bConnected;
+	bool m_bWillDestroy;
+	FMsgReaderDelegate m_dgReader;
 };
