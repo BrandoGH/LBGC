@@ -40,8 +40,6 @@ void AyncTaskSender::DoWork()
 		m_sleepSum = 0;
 
 		SendHeartInfo();
-		UE_LOG(LogTemp, Warning, TEXT("send heart"));
-
 
 		FWindowsPlatformProcess::Sleep(1);
 		++m_sleepSum;

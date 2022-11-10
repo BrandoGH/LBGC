@@ -10,11 +10,13 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "AyncTackConnector.h"
 #include "AyncTaskReader.h"
 #include "AyncTaskSender.h"
+#include "../GameInstance/LBGCGameInstance.h"
 
 UTcpClient::UTcpClient()
 	: m_pSocketClient(NULL)
 	, m_bConnected(false)
 	, m_bWillDestroy(false)
+	, m_bTcpTimeout(false)
 {
 	m_dgReader.BindUObject(this, &UTcpClient::OnMsgRead);
 }
@@ -25,6 +27,9 @@ UTcpClient::~UTcpClient()
 	// wait other thread op done (send/read)
 	FWindowsPlatformProcess::Sleep(1.F);
 	CloseSocket();
+#ifdef LBGS_DEBUG
+	UE_LOG(LogTemp, Warning, TEXT("Socket has close!"));
+#endif // LBGS_DEBUG
 }
 
 void UTcpClient::Init(int ClientSeq)
@@ -79,12 +84,24 @@ void UTcpClient::StartRead()
 
 void UTcpClient::StartSendHeart()
 {
-	FAsyncTask<AyncTaskSender>* TaskSender = new FAsyncTask<AyncTaskSender>(1);
+	FAsyncTask<AyncTaskSender>* TaskSender = new FAsyncTask<AyncTaskSender>(30);
 	TaskSender->StartBackgroundTask();
 }
 
 void UTcpClient::OnMsgRead(const TArray<uint8>& msg)
 {
-	UE_LOG(LogTemp, Warning, TEXT("read data"));
-
+	if (!LBGC_INSTANCE)
+	{
+		return;
+	}
+	LBGC_INSTANCE->GetTimerManager().ClearTimer(m_timeoutHandle);
+	FTimerDelegate dgTimeout;
+	dgTimeout.BindLambda(
+		[&]()
+		{
+			m_bTcpTimeout = true;
+			CloseSocket();
+		}
+	);
+	LBGC_INSTANCE->GetTimerManager().SetTimer(m_timeoutHandle, dgTimeout, 60, false);
 }
