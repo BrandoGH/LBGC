@@ -8,6 +8,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "../Widget/LoginWidget.h"
 #include "../Network/TcpClient.h"
 #include "../GameInstance/LBGCGameInstance.h"
+#include "../MsgModule/MsgCommon.h"
 
 
 AStartupPlayerController::AStartupPlayerController()
@@ -46,6 +47,69 @@ void AStartupPlayerController::SwitchToView(EnSwitchHUD target)
 void AStartupPlayerController::OnlineClick()
 {
 	SwitchToView(EnSwitchHUD::ESH_LOGIN);
+}
+
+void AStartupPlayerController::Login()
+{
+	if (!m_HUDLogin || !LBGC_INSTANCE)
+	{
+		return;
+	}
+	if (!CheckRoleNameSize() || !CheckRolePasswordSize())
+	{
+		m_HUDLogin->SetTip(TEXT("Error,Please check your role name or password length"));
+		return;
+	}
+	m_HUDLogin->SetTip(TEXT("Logining......"));
+	m_HUDLogin->SetLoadingShow(true);
+
+	FAyncLoadLevelDelegate callback;
+	callback.BindLambda(
+		[&](bool ok)
+		{
+			if (!ok)
+			{
+				if (m_HUDLogin)
+				{
+					m_HUDLogin->SetTip(TEXT("Load level error"));
+				}
+				return;
+			}
+			SetShowMouseCursor(false);
+		}
+	);
+	LBGC_INSTANCE->LoadMainGameLevel(callback);
+
+}
+
+bool AStartupPlayerController::CheckRoleNameSize()
+{
+	if (!m_HUDLogin)
+	{
+		return false;
+	}
+
+	if (m_HUDLogin->GetRoleName().Len() > NSTcpClient::g_nRoleNameSize || m_HUDLogin->GetRoleName().Len() <= 0)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool AStartupPlayerController::CheckRolePasswordSize()
+{
+	if (!m_HUDLogin)
+	{
+		return false;
+	}
+
+	if (m_HUDLogin->GetRolePassword().Len() > NSTcpClient::g_nRolePasswordSize || m_HUDLogin->GetRolePassword().Len() <= 0)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void AStartupPlayerController::InitFromBeginPlay()
@@ -137,4 +201,8 @@ void AStartupPlayerController::SwitchHUDToLogin()
 
 	m_HUDLogin->SetVisibility(ESlateVisibility::Visible);
 	m_HUDStartup->SetVisibility(ESlateVisibility::Hidden);
+
+	m_HUDLogin->SetTip("");
+	m_HUDLogin->SetLoadingShow(false);
+
 }

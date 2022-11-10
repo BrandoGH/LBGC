@@ -5,6 +5,7 @@
 #include <Components/Button.h>
 #include <Components/CircularThrobber.h>
 #include <Components/TextBlock.h>
+#include <Components/EditableTextBox.h>
 
 bool ULoginWidget::Initialize()
 {
@@ -16,6 +17,8 @@ bool ULoginWidget::Initialize()
 	m_btLogin = Cast<UButton>(GetWidgetFromName("Button_Login"));
 	m_loading = Cast<UCircularThrobber>(GetWidgetFromName("CircularThrobber_Loading"));
 	m_textTip = Cast<UTextBlock>(GetWidgetFromName("TextBlock_Tip"));
+	m_editRoleName = Cast<UEditableTextBox>(GetWidgetFromName("EditableTextBox_RoleName"));
+	m_editRolePassword = Cast<UEditableTextBox>(GetWidgetFromName("EditableTextBox_Password"));
 
 	DefaultSetting();
 	return true;
@@ -43,6 +46,24 @@ void ULoginWidget::SetTip(const FString& str)
 	{
 		m_textTip->SetText(FText::FromString(str));
 	}
+}
+
+FString ULoginWidget::GetRoleName()
+{
+	if (m_editRoleName)
+	{
+		return m_editRoleName->GetText().ToString();
+	}
+	return FString();
+}
+
+FString ULoginWidget::GetRolePassword()
+{
+	if (m_editRolePassword)
+	{
+		return m_editRolePassword->GetText().ToString();
+	}
+	return FString();
 }
 
 void ULoginWidget::DefaultSetting()

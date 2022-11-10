@@ -33,6 +33,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AStartupPlayerController Func")
 		void OnlineClick();
 
+	UFUNCTION(BlueprintCallable, Category = "AStartupPlayerController Func")
+		void Login();
+
+	UFUNCTION(BlueprintCallable, Category = "AStartupPlayerController Func")
+		bool CheckRoleNameSize();
+
+	UFUNCTION(BlueprintCallable, Category = "AStartupPlayerController Funcv")
+		bool CheckRolePasswordSize();
+
 	UFUNCTION(BlueprintNativeEvent, Category = "AStartupPlayerController Func")
 		void OnConnectServerOk();
 

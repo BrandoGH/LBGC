@@ -20,6 +20,8 @@ public:
 	void SetLoginButtonEnable(bool bEnable);
 	void SetLoadingShow(bool bShow);
 	void SetTip(const FString& str);
+	FString GetRoleName();
+	FString GetRolePassword();
 
 private:
 	void DefaultSetting();
@@ -28,4 +30,6 @@ private:
 	class UButton* m_btLogin;
 	class UCircularThrobber* m_loading;
 	class UTextBlock* m_textTip;
+	class UEditableTextBox* m_editRoleName;
+	class UEditableTextBox* m_editRolePassword;
 };

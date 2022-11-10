@@ -6,6 +6,8 @@
 #include "Engine/GameInstance.h"
 #include "LBGCGameInstance.generated.h"
 
+DECLARE_DELEGATE_OneParam(FAyncLoadLevelDelegate, bool /*ok*/);
+
 /**
  * 
  */
@@ -19,6 +21,7 @@ public:
 	virtual void Shutdown() override;
 
 	class UTcpClient* GetTcpClient(int ClientSeq = 0);
+	void LoadMainGameLevel(const FAyncLoadLevelDelegate& callback);
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "ULBGCGameInstance Func")
@@ -26,12 +29,12 @@ public:
 
 private:
 	void DeleteTcpClient();
+	void AyncLoadLevel(const FString& mapDir, const FString& mapName, const FAyncLoadLevelDelegate& dg);
 
 private:
 	static ULBGCGameInstance* instance;
 
 	class UTcpClient* m_tcpClient;
-	
 };
 
 #define LBGC_INSTANCE ULBGCGameInstance::GetInstance()
