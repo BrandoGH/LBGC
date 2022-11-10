@@ -11,6 +11,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "AyncTaskReader.h"
 #include "AyncTaskSender.h"
 #include "../GameInstance/LBGCGameInstance.h"
+#include "../MsgModule/CommonTool.h"
 
 UTcpClient::UTcpClient()
 	: m_pSocketClient(NULL)
@@ -74,6 +75,29 @@ void UTcpClient::ShutdownWrite()
 	{
 		m_pSocketClient->Shutdown(ESocketShutdownMode::Write);
 	}
+}
+
+void UTcpClient::Send(const uint8* Data, int32 Count, int32 MsgType, const ExpectMsgStruct& Expect)
+{
+	int32 byteSend = 0;
+	if (!GetSocket())
+	{
+		return;
+	}
+
+	MsgHeader header;
+	header.m_nMsgLen = sizeof(MsgHeader) + Count + sizeof(MsgEnder);
+	header.m_nMsgType = MsgType;
+
+	TArray<uint8> sendData;
+	sendData.Init(0, header.m_nMsgLen);
+
+	MsgEnder ender;
+	memmove(sendData.GetData(), (const char*)&header, sizeof(MsgHeader));
+	memmove(sendData.GetData() + sizeof(MsgHeader), Data, Count);
+	CommonTool::HashMd5Data(sendData.GetData(), sizeof(MsgHeader) + Count, ender.m_bytesMD5);
+	memmove(sendData.GetData() + sizeof(MsgHeader) + Count, (const uint8*)&ender, sizeof(MsgEnder));
+	GetSocket()->Send(sendData.GetData(), sendData.Num(), byteSend);
 }
 
 void UTcpClient::StartRead()
