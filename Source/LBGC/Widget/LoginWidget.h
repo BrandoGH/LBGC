@@ -16,4 +16,16 @@ class LBGC_API ULoginWidget : public UUserWidget
 	
 public:
 	virtual bool Initialize() override;
+
+	void SetLoginButtonEnable(bool bEnable);
+	void SetLoadingShow(bool bShow);
+	void SetTip(const FString& str);
+
+private:
+	void DefaultSetting();
+	
+private:
+	class UButton* m_btLogin;
+	class UCircularThrobber* m_loading;
+	class UTextBlock* m_textTip;
 };

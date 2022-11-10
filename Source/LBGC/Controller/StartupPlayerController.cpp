@@ -6,6 +6,8 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "StartupPlayerController.h"
 #include "../Widget/StartupWidget.h"
 #include "../Widget/LoginWidget.h"
+#include "../Network/TcpClient.h"
+#include "../GameInstance/LBGCGameInstance.h"
 
 
 AStartupPlayerController::AStartupPlayerController()
@@ -19,6 +21,7 @@ void AStartupPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	InitFromBeginPlay();
+	ConnectToServer();
 }
 
 void AStartupPlayerController::Tick(float DeltaTime)
@@ -57,6 +60,34 @@ void AStartupPlayerController::InitFromBeginPlay()
 	m_HUDLogin->AddToViewport();
 	SwitchToView(EnSwitchHUD::ESH_STARTUP);
 	SetShowMouseCursor(true);
+}
+
+void AStartupPlayerController::ConnectToServer()
+{
+	if (!LBGC_INSTANCE)
+	{
+		return;
+	}
+	
+
+	FClientConnectDelegate cd;
+	cd.BindLambda(
+		[&](bool ok, const FString& info)
+		{
+			if (m_HUDLogin)
+			{
+				m_HUDLogin->SetLoginButtonEnable(ok);
+			}
+			if (m_HUDStartup)
+			{
+				m_HUDStartup->SetTip(info);
+				m_HUDStartup->SetWaitngShow(false);
+			}
+		});
+	if (LBGC_INSTANCE->GetTcpClient())
+	{
+		LBGC_INSTANCE->GetTcpClient()->Connect(TEXT("127.0.0.1"), 4510, cd);
+	}
 }
 
 void AStartupPlayerController::SwitchHUDToStartUp()

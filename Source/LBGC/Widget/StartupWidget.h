@@ -16,4 +16,15 @@ class LBGC_API UStartupWidget : public UUserWidget
 	
 public:
 	virtual bool Initialize() override;
+
+	void SetTip(const FString& str);
+	void SetWaitngShow(bool bShow);
+
+private:
+	void DefaultSetting();
+
+private:
+	class UTextBlock* m_textTip;
+	class UThrobber* m_waiting;
+
 };

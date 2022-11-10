@@ -35,6 +35,7 @@ public:
 
 private:
 	void InitFromBeginPlay();
+	void ConnectToServer();
 	void SwitchHUDToStartUp();
 	void SwitchHUDToLogin();
 

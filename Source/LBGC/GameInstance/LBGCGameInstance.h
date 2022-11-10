@@ -18,12 +18,19 @@ public:
 	virtual void Init() override;
 	virtual void Shutdown() override;
 
+	class UTcpClient* GetTcpClient(int ClientSeq = 0);
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "ULBGCGameInstance Func")
 		static ULBGCGameInstance* GetInstance();
 
 private:
+	void DeleteTcpClient();
+
+private:
 	static ULBGCGameInstance* instance;
+
+	class UTcpClient* m_tcpClient;
 	
 };
 
