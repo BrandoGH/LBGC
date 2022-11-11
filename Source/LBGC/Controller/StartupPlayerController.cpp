@@ -28,7 +28,13 @@ void AStartupPlayerController::BeginPlay()
 void AStartupPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (LBGC_INSTANCE && LBGC_INSTANCE->GetTcpClient())
+	{
+		if (LBGC_INSTANCE->GetTcpClient()->IsTimerout() && m_HUDLogin)
+		{
+			m_HUDLogin->SetTip(TEXT("Connect Timeout, Please Check your Internet!"));
+		}
+	}
 }
 
 void AStartupPlayerController::SwitchToView(EnSwitchHUD target)
