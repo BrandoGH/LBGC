@@ -85,6 +85,8 @@ void UTcpClient::Send(const uint8* Data, int32 Count, int32 MsgType, const Expec
 		return;
 	}
 
+	m_mapExpectMsgtypeToDelegate.Add(Expect.ExpectMsgType, Expect.ExpectDg);
+
 	MsgHeader header;
 	header.m_nMsgLen = sizeof(MsgHeader) + Count + sizeof(MsgEnder);
 	header.m_nMsgType = MsgType;
@@ -128,4 +130,16 @@ void UTcpClient::OnMsgRead(const TArray<uint8>& msg)
 		}
 	);
 	LBGC_INSTANCE->GetTimerManager().SetTimer(m_timeoutHandle, dgTimeout, 60, false);
+
+
+	MsgHeader* header = (MsgHeader*)msg.GetData();
+	if (!header)
+	{
+		return;
+	}
+
+	if (m_mapExpectMsgtypeToDelegate.Contains(header->m_nMsgType))
+	{
+		m_mapExpectMsgtypeToDelegate[header->m_nMsgType].ExecuteIfBound(msg.GetData() + sizeof(MsgHeader));
+	}
 }

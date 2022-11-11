@@ -54,6 +54,7 @@ private:
 	bool m_bConnected;
 	bool m_bWillDestroy;
 	FMsgReaderDelegate m_dgReader;
+	TMap<int32, FMsgCallbackToExpectMsg> m_mapExpectMsgtypeToDelegate;
 
 	bool m_bTcpTimeout;
 	FTimerHandle m_timeoutHandle;

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "../Network/TcpClient.h"
 #include "StartupPlayerController.generated.h"
 
 UENUM()
@@ -51,6 +52,9 @@ private:
 	void SwitchHUDToStartUp();
 	void SwitchHUDToLogin();
 
+	void SendLoginInfo();
+	void OnLoginSC(const uint8* msg);
+
 public:
 	// startup HUD
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AStartupPlayerController Var")
@@ -61,5 +65,6 @@ public:
 private:
 	class UStartupWidget* m_HUDStartup;
 	class ULoginWidget* m_HUDLogin;
+	FMsgCallbackToExpectMsg m_dgLoginSC;
 
 };

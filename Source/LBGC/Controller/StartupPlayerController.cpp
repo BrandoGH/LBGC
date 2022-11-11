@@ -6,9 +6,9 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "StartupPlayerController.h"
 #include "../Widget/StartupWidget.h"
 #include "../Widget/LoginWidget.h"
-#include "../Network/TcpClient.h"
 #include "../GameInstance/LBGCGameInstance.h"
 #include "../MsgModule/MsgCommon.h"
+#include "../MsgModule/Msg/MsgLogin.h"
 
 
 AStartupPlayerController::AStartupPlayerController()
@@ -63,23 +63,7 @@ void AStartupPlayerController::Login()
 	m_HUDLogin->SetTip(TEXT("Logining......"));
 	m_HUDLogin->SetLoadingShow(true);
 
-	FAyncLoadLevelDelegate callback;
-	callback.BindLambda(
-		[&](bool ok)
-		{
-			if (!ok)
-			{
-				if (m_HUDLogin)
-				{
-					m_HUDLogin->SetTip(TEXT("Load level error"));
-				}
-				return;
-			}
-			SetShowMouseCursor(false);
-		}
-	);
-	LBGC_INSTANCE->LoadMainGameLevel(callback);
-
+	SendLoginInfo();
 }
 
 bool AStartupPlayerController::CheckRoleNameSize()
@@ -205,4 +189,70 @@ void AStartupPlayerController::SwitchHUDToLogin()
 	m_HUDLogin->SetTip("");
 	m_HUDLogin->SetLoadingShow(false);
 
+}
+
+void AStartupPlayerController::SendLoginInfo()
+{
+	if (!m_HUDLogin ||
+		!LBGC_INSTANCE ||
+		!LBGC_INSTANCE->GetTcpClient())
+	{
+		return;
+	}
+	MsgLoginCS cs;
+	const char* roleName = TCHAR_TO_ANSI(*m_HUDLogin->GetRoleName());
+	const char* rolePasswd = TCHAR_TO_ANSI(*m_HUDLogin->GetRolePassword());
+	memmove(cs.m_strRoleName, roleName, strlen(roleName));
+	memmove(cs.m_strPassword, rolePasswd, strlen(rolePasswd));
+
+	m_dgLoginSC.BindUObject(this, &AStartupPlayerController::OnLoginSC);
+	UTcpClient::ExpectMsgStruct expect;
+	expect.ExpectMsgType = MSG_TYPE_LOGIN_SC;
+	expect.ExpectDg = m_dgLoginSC;
+	LBGC_INSTANCE->GetTcpClient()->Send((const uint8*)&cs, sizeof(MsgLoginCS), MSG_TYPE_LOGIN_CS, expect);
+}
+
+void AStartupPlayerController::OnLoginSC(const uint8* msg)
+{
+	MsgLoginSC* sc = (MsgLoginSC*)msg;
+	if (!sc || !m_HUDLogin)
+	{
+		return;
+	}
+
+	if (sc->m_cLoginStatus == MsgLoginSC::LS_LOGIN_OK)
+	{
+		FAyncLoadLevelDelegate callback;
+		callback.BindLambda(
+			[&](bool ok)
+			{
+				if (!ok)
+				{
+					if (m_HUDLogin)
+					{
+						m_HUDLogin->SetTip(TEXT("Load level error"));
+					}
+					return;
+				}
+				SetShowMouseCursor(false);
+			}
+		);
+		LBGC_INSTANCE->LoadMainGameLevel(callback);
+	}
+	else
+	{
+		switch ((int)sc->m_cErrorReason)
+		{
+		case MsgLoginSC::ER_PASSWORD_ERROR:
+			m_HUDLogin->SetTip(TEXT("Password Error"));
+			break;
+		case MsgLoginSC::ER_HAS_LOGIN_ERROR:
+			m_HUDLogin->SetTip(TEXT("This Role Has Login"));
+			break;
+		case MsgLoginSC::ER_RELOGIN_ERROR:
+			m_HUDLogin->SetTip(TEXT("Last login error,please login again!!"));
+			break;
+		}
+		m_HUDLogin->SetLoadingShow(false);
+	}
 }
