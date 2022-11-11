@@ -230,7 +230,7 @@ void AStartupPlayerController::OnLoginSC(const uint8* msg)
 	{
 		FAyncLoadLevelDelegate callback;
 		callback.BindLambda(
-			[&](bool ok)
+			[&, sc](bool ok)
 			{
 				if (!ok)
 				{
@@ -241,6 +241,7 @@ void AStartupPlayerController::OnLoginSC(const uint8* msg)
 					return;
 				}
 				SetShowMouseCursor(false);
+				LBGC_INSTANCE->SetLocalRoleName(FString(strlen((const char*)sc->m_strRoleName), (const char*)sc->m_strRoleName));
 			}
 		);
 		LBGC_INSTANCE->LoadMainGameLevel(callback);

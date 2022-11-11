@@ -9,9 +9,16 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include <Kismet/GameplayStatics.h>
 #include "Engine/Engine.h"
 
+namespace
+{
+const FVector g_vecDefaultCreateRoleLoc = FVector(0.f, 0.f, 190.f);
+}
+
 void ULBGCGameInstance::Init()
 {
 	m_tcpClient = NULL;
+	m_roleInfo.Reset();
+	SpawnLocalRole = LoadClass<AMainRole>(NULL, TEXT("Blueprint'/Game/LGGC_Game/Blueprint/Role/BP_MainRole.BP_MainRole_C'")); 
 }
 
 void ULBGCGameInstance::Shutdown()
@@ -48,6 +55,13 @@ void ULBGCGameInstance::PrintDebugMessageOnScreen(int32 Key, float TimeToDisplay
 }
 
 ULBGCGameInstance* ULBGCGameInstance::instance = NULL;
+void ULBGCGameInstance::CreateLocalRole()
+{
+	if (GetWorld())
+	{
+		GetWorld()->SpawnActor<AMainRole>(SpawnLocalRole, g_vecDefaultCreateRoleLoc, FRotator(0.f));
+	}
+}
 ULBGCGameInstance* ULBGCGameInstance::GetInstance()
 {
 	if (GEngine)
