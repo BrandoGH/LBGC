@@ -7,6 +7,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "../Network/TcpClient.h"
 #include <UObject/UObjectGlobals.h>
 #include <Kismet/GameplayStatics.h>
+#include "Engine/Engine.h"
 
 void ULBGCGameInstance::Init()
 {
@@ -34,6 +35,16 @@ UTcpClient* ULBGCGameInstance::GetTcpClient(int ClientSeq)
 void ULBGCGameInstance::LoadMainGameLevel(const FAyncLoadLevelDelegate& callback)
 {
 	AyncLoadLevel(TEXT("/Game/LGGC_Game/Maps/"), TEXT("Map_Test"), callback);
+}
+
+void ULBGCGameInstance::PrintDebugMessageOnScreen(int32 Key, float TimeToDisplay, FColor DisplayColor, const FString& DebugMessage, bool bNewerOnTop, const FVector2D& TextScale)
+{
+#ifdef LBGS_DEBUG
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(Key, TimeToDisplay, DisplayColor, DebugMessage, bNewerOnTop, TextScale);
+	}
+#endif // LBGS_DEBUG
 }
 
 ULBGCGameInstance* ULBGCGameInstance::instance = NULL;

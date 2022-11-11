@@ -23,6 +23,8 @@ public:
 	class UTcpClient* GetTcpClient(int ClientSeq = 0);
 	void LoadMainGameLevel(const FAyncLoadLevelDelegate& callback);
 
+	void PrintDebugMessageOnScreen(int32 Key, float TimeToDisplay, FColor DisplayColor, const FString& DebugMessage, bool bNewerOnTop = true, const FVector2D& TextScale = FVector2D::UnitVector);
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "ULBGCGameInstance Func")
 		static ULBGCGameInstance* GetInstance();
