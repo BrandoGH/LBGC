@@ -5,25 +5,11 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "../Character/MainRole.h"
+#include "../Character/MinorRole.h"
 #include "LBGCGameInstance.generated.h"
 
 DECLARE_DELEGATE_OneParam(FAyncLoadLevelDelegate, bool /*ok*/);
 
-struct RoleInfoParam
-{
-	RoleInfoParam()
-	{
-		Reset();
-	}
-
-	void Reset()
-	{
-		m_bCreateModel = false;
-	}
-
-	FString m_localRoleName;
-	bool m_bCreateModel;
-};
 
 /**
  * 
@@ -42,11 +28,11 @@ public:
 
 	void PrintDebugMessageOnScreen(int32 Key, float TimeToDisplay, FColor DisplayColor, const FString& DebugMessage, bool bNewerOnTop = true, const FVector2D& TextScale = FVector2D::UnitVector);
 
-	void SetLocalRoleName(const FString& name) { m_roleInfo.m_localRoleName = name; }
-	FString GetLocalRoleName() { return m_roleInfo.m_localRoleName; }
-	void SetCreateModelFlag(bool bCreate) { m_roleInfo.m_bCreateModel = bCreate; }
-	bool IsCreateModel() { return m_roleInfo.m_bCreateModel; }
 	void CreateLocalRole();
+	void CreateRemoteRole(const FString& roleName);
+
+	AMainRole* GetLocalRole();
+	AMinorRole* GetMinorRole(const FString& roleName);
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "ULBGCGameInstance Func")
@@ -57,15 +43,18 @@ private:
 	void AyncLoadLevel(const FString& mapDir, const FString& mapName, const FAyncLoadLevelDelegate& dg);
 
 public:
-public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ULBGCGameInstance Var")
 		TSubclassOf<AMainRole> SpawnLocalRole;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ULBGCGameInstance Var")
+		TSubclassOf<AMinorRole> SpawnRemoteRole;
 
 private:
 	static ULBGCGameInstance* instance;
 
 	class UTcpClient* m_tcpClient;
-	RoleInfoParam m_roleInfo;
+
+	TMap<FString, TSubclassOf<AMinorRole>> m_mapRoleNameToMinorRoleModel;
 };
 
 #define LBGC_INSTANCE ULBGCGameInstance::GetInstance()

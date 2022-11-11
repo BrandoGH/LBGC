@@ -12,6 +12,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "AyncTaskSender.h"
 #include "../GameInstance/LBGCGameInstance.h"
 #include "../MsgModule/CommonTool.h"
+#include "../MsgModule/Msg/MsgCreateRoleModel.h"
 
 UTcpClient::UTcpClient()
 	: m_pSocketClient(NULL)

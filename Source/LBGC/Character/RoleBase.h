@@ -25,7 +25,18 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void SetRoleName(const FString& name) { m_roleName = name; }
+	FString GetRoleName() { return m_roleName; }
+	void SetCreateModelFlag(bool bCreate) { m_bCreateModel = bCreate; }
+	bool IsCreateModel() { return m_bCreateModel; }
+
 protected:
 	void CollisionPresets();
+
+
+
+protected:
+	FString m_roleName;
+	bool m_bCreateModel;
 
 };

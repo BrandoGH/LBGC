@@ -44,23 +44,37 @@ void AMainPlayerController::OnMsgCreateRoleSC(const uint8* msg)
 		return;
 	}
 
+	AMainRole* localRole = LBGC_INSTANCE->GetLocalRole();
+	if (!localRole)
+	{
+		return;
+	}
+
 	MsgCreateRoleSC* sc = (MsgCreateRoleSC*)msg;
 	if (!sc)
 	{
 		return;
 	}
 
-	FString localRoleName = LBGC_INSTANCE->GetLocalRoleName();
+	FString localRoleName = localRole->GetRoleName();
 	FString willCreateRoleName = FString(strlen((const char*)sc->m_strCreateRoleName), (const char*)sc->m_strCreateRoleName);
 
 	if (localRoleName == willCreateRoleName)
 	{
-		if (LBGC_INSTANCE->IsCreateModel())
+		if (localRole->IsCreateModel())
 		{
 			return;
 		}
+		FWindowsPlatformProcess::Sleep(0.01F);
 		LBGC_INSTANCE->CreateLocalRole();
-		LBGC_INSTANCE->SetCreateModelFlag(true);
+		localRole->SetCreateModelFlag(true);
+		LBGC_INSTANCE->PrintDebugMessageOnScreen(-1, 1000.f, FColor::Yellow, FString::Printf(TEXT("Has create myself: %s"), *localRoleName));
 		return;
 	}
+
+	// create other role
+	FWindowsPlatformProcess::Sleep(0.01F);
+	LBGC_INSTANCE->CreateRemoteRole(willCreateRoleName);
+	LBGC_INSTANCE->PrintDebugMessageOnScreen(-1, 1000.f, FColor::Yellow, FString::Printf(TEXT("%s: shuold create other role[%s] on my clients"), *localRoleName, *willCreateRoleName));
+
 }

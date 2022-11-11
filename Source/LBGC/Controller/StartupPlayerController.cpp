@@ -241,7 +241,13 @@ void AStartupPlayerController::OnLoginSC(const uint8* msg)
 					return;
 				}
 				SetShowMouseCursor(false);
-				LBGC_INSTANCE->SetLocalRoleName(FString(strlen((const char*)sc->m_strRoleName), (const char*)sc->m_strRoleName));
+
+				AMainRole* role = LBGC_INSTANCE->GetLocalRole();
+				if (role)
+				{
+					role->SetRoleName(FString(strlen((const char*)sc->m_strRoleName), (const char*)sc->m_strRoleName));
+				}
+
 			}
 		);
 		LBGC_INSTANCE->LoadMainGameLevel(callback);

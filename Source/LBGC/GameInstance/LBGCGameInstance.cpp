@@ -17,8 +17,8 @@ const FVector g_vecDefaultCreateRoleLoc = FVector(0.f, 0.f, 190.f);
 void ULBGCGameInstance::Init()
 {
 	m_tcpClient = NULL;
-	m_roleInfo.Reset();
-	SpawnLocalRole = LoadClass<AMainRole>(NULL, TEXT("Blueprint'/Game/LGGC_Game/Blueprint/Role/BP_MainRole.BP_MainRole_C'")); 
+	SpawnLocalRole = LoadClass<AMainRole>(NULL, TEXT("Blueprint'/Game/LGGC_Game/Blueprint/Role/BP_MainRole.BP_MainRole_C'"));
+	SpawnRemoteRole = LoadClass<AMainRole>(NULL, TEXT("BBlueprint'/Game/LGGC_Game/Blueprint/Role/BP_MinorRole.BP_MinorRole_C'")); 
 }
 
 void ULBGCGameInstance::Shutdown()
@@ -61,6 +61,26 @@ void ULBGCGameInstance::CreateLocalRole()
 	{
 		GetWorld()->SpawnActor<AMainRole>(SpawnLocalRole, g_vecDefaultCreateRoleLoc, FRotator(0.f));
 	}
+}
+void ULBGCGameInstance::CreateRemoteRole(const FString& roleName)
+{
+	m_mapRoleNameToMinorRoleModel.Emplace(roleName, SpawnRemoteRole);
+	if (GetWorld())
+	{
+		GetWorld()->SpawnActor<AMainRole>(m_mapRoleNameToMinorRoleModel[roleName], g_vecDefaultCreateRoleLoc, FRotator(0.f));
+	}
+}
+AMainRole* ULBGCGameInstance::GetLocalRole()
+{
+	return Cast<AMainRole>(SpawnLocalRole->GetDefaultObject());
+}
+AMinorRole* ULBGCGameInstance::GetMinorRole(const FString& roleName)
+{
+	if (m_mapRoleNameToMinorRoleModel.Contains(roleName))
+	{
+		return Cast<AMinorRole>(m_mapRoleNameToMinorRoleModel[roleName]->GetDefaultObject());
+	}
+	return NULL;
 }
 ULBGCGameInstance* ULBGCGameInstance::GetInstance()
 {

@@ -5,7 +5,6 @@ PRAGMA_DISABLE_OPTIMIZATION
 #endif // LBGS_DEBUG
 #include "AyncTaskSender.h"
 #include "../GameInstance/LBGCGameInstance.h"
-#include "TcpClient.h"
 #include "../MsgModule/MsgCommon.h"
 #include "../MsgModule/Msg/MsgHeart.h"
 #include "../MsgModule/CommonTool.h"
@@ -67,8 +66,17 @@ void AyncTaskSender::SendHeartInfo()
 	memmove(sendData.GetData() + sizeof(MsgHeader) + sizeof(MsgHeartCS), (const uint8*)&ender, sizeof(MsgEnder));
 
 	UTcpClient* tcpClient = LBGC_INSTANCE->GetTcpClient();
-	if (tcpClient && tcpClient->GetSocket())
+
+	if (!m_dgMsgCreateRoleSC.IsBound())
 	{
-		tcpClient->GetSocket()->Send(sendData.GetData(), sendData.Num(), byteSend);
+		m_dgMsgCreateRoleSC.BindLambda([](const uint8* msg) {});
+	}
+	UTcpClient::ExpectMsgStruct expect;
+	expect.ExpectMsgType = MSG_TYPE_HEART_SC;
+	expect.ExpectDg = m_dgMsgCreateRoleSC;
+	tcpClient->Send((const uint8*)&cs, sizeof(MsgHeartCS), MSG_TYPE_HEART_CS, expect);
+	if (tcpClient)
+	{
+		tcpClient->Send(sendData.GetData(), sendData.Num(), MSG_TYPE_HEART_SC, expect);
 	}
 }

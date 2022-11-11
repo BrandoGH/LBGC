@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TcpClient.h"
 
 /**
  * 
@@ -29,4 +30,7 @@ private:
 	int32 m_heartSec;
 	// sumulate sleep xxx sec, close game ,this thread quick exit
 	int32 m_sleepSum;
+
+	FMsgCallbackToExpectMsg m_dgMsgCreateRoleSC;
+
 };
