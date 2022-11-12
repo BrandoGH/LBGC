@@ -11,14 +11,15 @@ PRAGMA_DISABLE_OPTIMIZATION
 
 namespace
 {
-const FVector g_vecDefaultCreateRoleLoc = FVector(0.f, 0.f, 190.f);
+const FVector g_vecDefaultCreateMainRoleLoc = FVector(0.f, 0.f, 190.f);
+const FVector g_vecDefaultCreateMinorRoleLoc = FVector(0.f, 0.f, 88.f);
 }
 
 void ULBGCGameInstance::Init()
 {
 	m_tcpClient = NULL;
 	SpawnLocalRole = LoadClass<AMainRole>(NULL, TEXT("Blueprint'/Game/LGGC_Game/Blueprint/Role/BP_MainRole.BP_MainRole_C'"));
-	SpawnRemoteRole = LoadClass<AMainRole>(NULL, TEXT("BBlueprint'/Game/LGGC_Game/Blueprint/Role/BP_MinorRole.BP_MinorRole_C'")); 
+	SpawnRemoteRole = LoadClass<AMinorRole>(NULL, TEXT("BBlueprint'/Game/LGGC_Game/Blueprint/Role/BP_MinorRole.BP_MinorRole_C'"));
 }
 
 void ULBGCGameInstance::Shutdown()
@@ -59,7 +60,7 @@ void ULBGCGameInstance::CreateLocalRole()
 {
 	if (GetWorld())
 	{
-		GetWorld()->SpawnActor<AMainRole>(SpawnLocalRole, g_vecDefaultCreateRoleLoc, FRotator(0.f));
+		GetWorld()->SpawnActor<AMainRole>(SpawnLocalRole, g_vecDefaultCreateMainRoleLoc, FRotator(0.f));
 	}
 }
 void ULBGCGameInstance::CreateRemoteRole(const FString& roleName)
@@ -67,7 +68,7 @@ void ULBGCGameInstance::CreateRemoteRole(const FString& roleName)
 	m_mapRoleNameToMinorRoleModel.Emplace(roleName, SpawnRemoteRole);
 	if (GetWorld())
 	{
-		GetWorld()->SpawnActor<AMainRole>(m_mapRoleNameToMinorRoleModel[roleName], g_vecDefaultCreateRoleLoc, FRotator(0.f));
+		GetWorld()->SpawnActor<AMinorRole>(m_mapRoleNameToMinorRoleModel[roleName], g_vecDefaultCreateMinorRoleLoc, FRotator(0.f));
 	}
 }
 AMainRole* ULBGCGameInstance::GetLocalRole()

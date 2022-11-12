@@ -23,6 +23,17 @@ void AMainPlayerController::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AMainPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	
+	AMainRole* localRole = LBGC_INSTANCE->GetLocalRole();
+	if (localRole)
+	{
+		localRole->Logout();
+	}
+}
+
 void AMainPlayerController::SendCreateRoleModel()
 {
 	if (!LBGC_INSTANCE || !LBGC_INSTANCE->GetTcpClient())
@@ -65,15 +76,14 @@ void AMainPlayerController::OnMsgCreateRoleSC(const uint8* msg)
 		{
 			return;
 		}
-		FWindowsPlatformProcess::Sleep(0.01F);
+
 		LBGC_INSTANCE->CreateLocalRole();
-		localRole->SetCreateModelFlag(true);
+		localRole->Login();
 		LBGC_INSTANCE->PrintDebugMessageOnScreen(-1, 1000.f, FColor::Yellow, FString::Printf(TEXT("Has create myself: %s"), *localRoleName));
 		return;
 	}
 
 	// create other role
-	FWindowsPlatformProcess::Sleep(0.01F);
 	LBGC_INSTANCE->CreateRemoteRole(willCreateRoleName);
 	LBGC_INSTANCE->PrintDebugMessageOnScreen(-1, 1000.f, FColor::Yellow, FString::Printf(TEXT("%s: shuold create other role[%s] on my clients"), *localRoleName, *willCreateRoleName));
 

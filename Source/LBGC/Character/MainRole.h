@@ -28,6 +28,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void Login() override;
+	virtual void Logout() override;
+
 private:
 	void InitWhenBeginPlay();
 

@@ -26,6 +26,7 @@ private:
 	TArray<uint8> m_arrReadMsg;
 	TArray<uint8> m_onceMsg;
 	FMsgReaderDelegate m_dgReadCallback;
+	TQueue<TArray<uint8>> m_queueMsg;
 
 	MsgHeader m_msgHeader;
 	MsgEnder m_msgEnder;

@@ -84,6 +84,16 @@ void AMainRole::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("OnSpeedUp", IE_Released, this, &AMainRole::OnSlowDown);
 }
 
+void AMainRole::Login()
+{
+	SetCreateModelFlag(true);
+}
+
+void AMainRole::Logout()
+{
+	SetCreateModelFlag(false);
+}
+
 void AMainRole::InitWhenBeginPlay()
 {
 	if (GetCharacterMovement())

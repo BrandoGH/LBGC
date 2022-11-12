@@ -48,9 +48,15 @@ if (!CommonTool::IsMd5Equal_16byte(checkEnd.m_bytesMD5, m_msgEnder.m_bytesMD5))\
 	m_nNextNeedReadSize = 0;\
 	break;\
 }\
+m_queueMsg.Enqueue(m_onceMsg);\
 AsyncTask(ENamedThreads::GameThread, [&]()\
 {\
-	m_dgReadCallback.ExecuteIfBound(m_onceMsg);\
+	TArray<uint8> dequeueMsg;\
+	while (!m_queueMsg.IsEmpty())\
+	{\
+		m_queueMsg.Dequeue(dequeueMsg);\
+		m_dgReadCallback.ExecuteIfBound(dequeueMsg);\
+	}\
 });
 
 AyncTaskReader::AyncTaskReader(const FMsgReaderDelegate& ReadCallback)
@@ -139,24 +145,7 @@ void AyncTaskReader::DoWork()
 				{
 					memmove(m_onceMsg.GetData(), m_arrReadMsg.GetData() + m_nHasReadDataSize, m_msgHeader.m_nMsgLen);
 
-					//TASK_READER_MSG_CALL_HANDLER;
-					uint16 userDataSize = m_msgHeader.m_nMsgLen - sizeof(MsgHeader) - sizeof(MsgEnder); 
-					m_msgEnder = *(MsgEnder*)(m_onceMsg.GetData() + sizeof(MsgHeader) + userDataSize); 
-					MsgEnder checkEnd; 
-					CommonTool::HashMd5Data(m_onceMsg.GetData(), sizeof(MsgHeader) + userDataSize, checkEnd.m_bytesMD5); 
-					if (!CommonTool::IsMd5Equal_16byte(checkEnd.m_bytesMD5, m_msgEnder.m_bytesMD5))
-					{
-						m_bHeaderIntegrated = true; 
-						m_nLastHasReadSize = 0; 
-						m_nNextNeedReadSize = 0; 
-						break;
-					}
-
-					AsyncTask(ENamedThreads::GameThread, [&]()
-						{
-							m_dgReadCallback.ExecuteIfBound(m_onceMsg);
-						});
-
+					TASK_READER_MSG_CALL_HANDLER;
 
 					m_nHasReadDataSize += m_msgHeader.m_nMsgLen;
 					m_nLastHasReadSize = 0;

@@ -25,6 +25,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void Login() {}
+	virtual void Logout() {}
+
 	void SetRoleName(const FString& name) { m_roleName = name; }
 	FString GetRoleName() { return m_roleName; }
 	void SetCreateModelFlag(bool bCreate) { m_bCreateModel = bCreate; }
