@@ -7,6 +7,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "../GameInstance/LBGCGameInstance.h"
 #include "../MsgModule/Msg/MsgCreateRoleModel.h"
 #include <Kismet/GameplayStatics.h>
+#include "../MsgModule/Msg/MsgRoleInfoUpdate.h"
 
 AMainPlayerController::AMainPlayerController()
 {
@@ -32,6 +33,20 @@ void AMainPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		localRole->Logout();
 	}
+}
+
+void AMainPlayerController::OnRoleInfoUpdateSC(const uint8* msg)
+{
+	MsgRoleInfoUpdateSC* sc = (MsgRoleInfoUpdateSC*)msg;
+	if (!sc)
+	{
+		return;
+	}
+
+	LBGC_INSTANCE->PrintDebugMessageOnScreen(0, 1000.f, FColor::Yellow,
+		FString::Printf(TEXT("alter [%s] location to X[%04lf] Y[%04lf] Z[%04lf]"),
+			*FString(strlen((const char*)sc->m_targetRoleName), (const char*)sc->m_targetRoleName), sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double));
+
 }
 
 void AMainPlayerController::SendCreateRoleModel()

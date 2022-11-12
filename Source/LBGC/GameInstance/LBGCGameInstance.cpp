@@ -83,6 +83,24 @@ AMinorRole* ULBGCGameInstance::GetMinorRole(const FString& roleName)
 	}
 	return NULL;
 }
+FVector ULBGCGameInstance::GetLocalRoleLocation()
+{
+	if (!GetLocalRoleController() ||
+		!GetLocalRoleController()->GetPawn())
+	{
+		return FVector();
+	}
+
+	return GetLocalRoleController()->GetPawn()->GetActorLocation();
+}
+APlayerController* ULBGCGameInstance::GetLocalRoleController()
+{
+	if (!GetWorld())
+	{
+		return NULL;
+	}
+	return GetWorld()->GetFirstPlayerController();
+}
 ULBGCGameInstance* ULBGCGameInstance::GetInstance()
 {
 	if (GEngine)

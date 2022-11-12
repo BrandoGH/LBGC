@@ -6,6 +6,11 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include <Kismet/KismetMathLibrary.h>
+#include "../GameInstance/LBGCGameInstance.h"
+#include "../MsgModule/MsgCommon.h"
+#include "../MsgModule/Msg/MsgRoleInfoUpdate.h"
+#include "../Controller/MainPlayerController.h"
 
 namespace
 {
@@ -61,6 +66,7 @@ void AMainRole::BeginPlay()
 void AMainRole::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	SendUpdateRoleInfo();
 }
 
 void AMainRole::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -107,6 +113,45 @@ void AMainRole::InitWhenBeginPlay()
 		GetCharacterMovement()->MaxWalkSpeed = g_fWalkSeepdDefault;
 		GetCharacterMovement()->MaxAcceleration = 300.f;
 	}
+
+}
+
+void AMainRole::SendUpdateRoleInfo()
+{
+	if (!LBGC_INSTANCE || !LBGC_INSTANCE->GetTcpClient())
+	{
+		return;
+	}
+
+	FVector vecCurrentLocation = LBGC_INSTANCE->GetLocalRoleLocation();
+	if (UKismetMathLibrary::EqualExactly_VectorVector(vecCurrentLocation, m_vecLastLocation))
+	{
+		return;
+	}
+
+	m_vecLastLocation = vecCurrentLocation;
+
+	LBGC_INSTANCE->PrintDebugMessageOnScreen(0, 1000.f, FColor::Yellow,
+		FString::Printf(TEXT("X[%02f] Y[%02f] Z[%02f]"), m_vecLastLocation.X, m_vecLastLocation.Y, m_vecLastLocation.Z));
+
+	MsgRoleInfoUpdateCS cs;
+	cs.m_roleX = m_vecLastLocation.X;
+	cs.m_roleY = m_vecLastLocation.Y;
+	cs.m_roleZ = m_vecLastLocation.Z;
+		m_dgMsgRoleInfoUpdateCS.BindUObject(
+			Cast<AMainPlayerController>(LBGC_INSTANCE->GetLocalRoleController()),
+			&AMainPlayerController::OnRoleInfoUpdateSC);
+		UTcpClient::ExpectMsgStruct expect;
+		expect.ExpectMsgType = MSG_TYPE_ROLE_INFO_UPDATE_SC;
+		expect.ExpectDg = m_dgMsgRoleInfoUpdateCS;
+
+		uint8 sendData[sizeof(MsgRoleInfoUpdateCS)];
+		memset(sendData, 0, sizeof(sendData));
+		memmove(sendData, cs.m_roleX.m_bytes, sizeof(MsgDouble));
+		memmove(sendData + sizeof(MsgDouble), cs.m_roleY.m_bytes, sizeof(MsgDouble));
+		memmove(sendData + sizeof(MsgDouble) * 2, cs.m_roleZ.m_bytes, sizeof(MsgDouble));
+
+		LBGC_INSTANCE->GetTcpClient()->Send(sendData, sizeof(sendData), MSG_TYPE_ROLE_INFO_UPDATE_CS, expect);
 
 }
 

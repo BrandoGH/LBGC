@@ -21,9 +21,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+public:
+	void OnRoleInfoUpdateSC(const uint8* msg);
+
 private:
 	void SendCreateRoleModel();
 	void OnMsgCreateRoleSC(const uint8* msg);
+
 
 private:
 	FMsgCallbackToExpectMsg m_dgMsgCreateRoleSC;

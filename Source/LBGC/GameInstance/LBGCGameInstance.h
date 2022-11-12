@@ -34,6 +34,9 @@ public:
 	AMainRole* GetLocalRole();
 	AMinorRole* GetMinorRole(const FString& roleName);
 
+	FVector GetLocalRoleLocation();
+	class APlayerController* GetLocalRoleController();
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "ULBGCGameInstance Func")
 		static ULBGCGameInstance* GetInstance();

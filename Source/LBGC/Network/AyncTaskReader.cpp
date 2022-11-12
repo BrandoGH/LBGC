@@ -103,7 +103,6 @@ void AyncTaskReader::DoWork()
 
 		while (m_nHasReadDataSize < m_nReadSise)
 		{
-			FWindowsPlatformProcess::Sleep(0.01F);
 			if (m_nLastHasReadSize > 0 && m_nNextNeedReadSize > 0)
 			{
 				memmove(m_onceMsg.GetData() + m_nLastHasReadSize, m_arrReadMsg.GetData(), m_nNextNeedReadSize);

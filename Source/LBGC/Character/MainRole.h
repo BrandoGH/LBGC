@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "RoleBase.h"
+#include "../Network/TcpClient.h"
 #include "MainRole.generated.h"
 
 /**
@@ -33,6 +34,7 @@ public:
 
 private:
 	void InitWhenBeginPlay();
+	void SendUpdateRoleInfo();
 
 	void MoveControl(EAxis::Type type, float fValue);
 	void OnMoveForward(float fValue);
@@ -53,4 +55,6 @@ public:
 
 private:
 	bool m_bSpeedUp;
+	FVector m_vecLastLocation;
+	FMsgCallbackToExpectMsg m_dgMsgRoleInfoUpdateCS;
 };
