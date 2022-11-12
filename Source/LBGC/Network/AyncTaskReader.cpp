@@ -83,7 +83,6 @@ void AyncTaskReader::DoWork()
 
 	while (!m_client->IsWillDestroy())
 	{
-		FWindowsPlatformProcess::Sleep(0.01F);
 
 		if (!m_client->GetSocket()->HasPendingData((uint32&)m_nReadSise))
 		{

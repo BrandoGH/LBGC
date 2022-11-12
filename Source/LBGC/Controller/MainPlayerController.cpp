@@ -8,6 +8,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "../MsgModule/Msg/MsgCreateRoleModel.h"
 #include <Kismet/GameplayStatics.h>
 #include "../MsgModule/Msg/MsgRoleInfoUpdate.h"
+#include <AIController.h>
 
 AMainPlayerController::AMainPlayerController()
 {
@@ -37,16 +38,31 @@ void AMainPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AMainPlayerController::OnRoleInfoUpdateSC(const uint8* msg)
 {
+	if (!LBGC_INSTANCE)
+	{
+		return;
+	}
 	MsgRoleInfoUpdateSC* sc = (MsgRoleInfoUpdateSC*)msg;
 	if (!sc)
 	{
 		return;
 	}
 
+	FString scRoleName = FString(strlen((const char*)sc->m_targetRoleName), (const char*)sc->m_targetRoleName);
 	LBGC_INSTANCE->PrintDebugMessageOnScreen(0, 1000.f, FColor::Yellow,
 		FString::Printf(TEXT("alter [%s] location to X[%04lf] Y[%04lf] Z[%04lf]"),
-			*FString(strlen((const char*)sc->m_targetRoleName), (const char*)sc->m_targetRoleName), sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double));
+			*scRoleName, sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double));
 
+
+	FVector VecTarget = FVector(sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double);
+	AMinorRole* minorRole = LBGC_INSTANCE->GetMinorRole(scRoleName);
+	if (!minorRole)
+	{
+		return;
+	}
+
+	minorRole->SetActorLocation(VecTarget);
+	
 }
 
 void AMainPlayerController::SendCreateRoleModel()
@@ -99,7 +115,12 @@ void AMainPlayerController::OnMsgCreateRoleSC(const uint8* msg)
 	}
 
 	// create other role
-	LBGC_INSTANCE->CreateRemoteRole(willCreateRoleName);
-	LBGC_INSTANCE->PrintDebugMessageOnScreen(-1, 1000.f, FColor::Yellow, FString::Printf(TEXT("%s: shuold create other role[%s] on my clients"), *localRoleName, *willCreateRoleName));
+	AMinorRole* minorRole = LBGC_INSTANCE->CreateRemoteRole(willCreateRoleName);
+	if (minorRole)
+	{
+		minorRole->SetRoleName(willCreateRoleName);
+		minorRole->Login();
+	}
 
+	LBGC_INSTANCE->PrintDebugMessageOnScreen(-1, 1000.f, FColor::Yellow, FString::Printf(TEXT("%s: shuold create other role[%s] on my clients"), *localRoleName, *willCreateRoleName));
 }

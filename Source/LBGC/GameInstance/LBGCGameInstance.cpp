@@ -63,26 +63,33 @@ void ULBGCGameInstance::CreateLocalRole()
 		GetWorld()->SpawnActor<AMainRole>(SpawnLocalRole, g_vecDefaultCreateMainRoleLoc, FRotator(0.f));
 	}
 }
-void ULBGCGameInstance::CreateRemoteRole(const FString& roleName)
+
+AMinorRole* ULBGCGameInstance::CreateRemoteRole(const FString& roleName)
 {
-	m_mapRoleNameToMinorRoleModel.Emplace(roleName, SpawnRemoteRole);
-	if (GetWorld())
+	if (!GetWorld())
 	{
-		GetWorld()->SpawnActor<AMinorRole>(m_mapRoleNameToMinorRoleModel[roleName], g_vecDefaultCreateMinorRoleLoc, FRotator(0.f));
+		return NULL;
 	}
+	m_mapRoleNameToMinorRoleModel.Emplace(roleName, 
+		GetWorld()->SpawnActor<AMinorRole>(SpawnRemoteRole, g_vecDefaultCreateMinorRoleLoc, FRotator(0.f)));
+	
+	return GetMinorRole(roleName);
 }
+
 AMainRole* ULBGCGameInstance::GetLocalRole()
 {
-	return Cast<AMainRole>(SpawnLocalRole->GetDefaultObject());
+	return Cast<AMainRole>(SpawnLocalRole.GetDefaultObject());
 }
+
 AMinorRole* ULBGCGameInstance::GetMinorRole(const FString& roleName)
 {
 	if (m_mapRoleNameToMinorRoleModel.Contains(roleName))
 	{
-		return Cast<AMinorRole>(m_mapRoleNameToMinorRoleModel[roleName]->GetDefaultObject());
+		return m_mapRoleNameToMinorRoleModel[roleName];
 	}
 	return NULL;
 }
+
 FVector ULBGCGameInstance::GetLocalRoleLocation()
 {
 	if (!GetLocalRoleController() ||
@@ -93,6 +100,7 @@ FVector ULBGCGameInstance::GetLocalRoleLocation()
 
 	return GetLocalRoleController()->GetPawn()->GetActorLocation();
 }
+
 APlayerController* ULBGCGameInstance::GetLocalRoleController()
 {
 	if (!GetWorld())
@@ -101,6 +109,8 @@ APlayerController* ULBGCGameInstance::GetLocalRoleController()
 	}
 	return GetWorld()->GetFirstPlayerController();
 }
+
+
 ULBGCGameInstance* ULBGCGameInstance::GetInstance()
 {
 	if (GEngine)

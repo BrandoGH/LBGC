@@ -10,6 +10,11 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "../MsgModule/MsgCommon.h"
 #include "../MsgModule/Msg/MsgLogin.h"
 
+namespace
+{
+const FString g_strServerIp = "192.168.43.115";
+const uint16 g_nServerPort = 4510;
+}
 
 AStartupPlayerController::AStartupPlayerController()
 	: m_HUDStartup(NULL)
@@ -150,7 +155,7 @@ void AStartupPlayerController::ConnectToServer()
 		});
 	if (LBGC_INSTANCE->GetTcpClient())
 	{
-		LBGC_INSTANCE->GetTcpClient()->Connect(TEXT("127.0.0.1"), 4510, cd);
+		LBGC_INSTANCE->GetTcpClient()->Connect(g_strServerIp, g_nServerPort, cd);
 	}
 }
 

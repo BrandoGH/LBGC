@@ -6,6 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "../Character/MainRole.h"
 #include "../Character/MinorRole.h"
+#include <AIController.h>
 #include "LBGCGameInstance.generated.h"
 
 DECLARE_DELEGATE_OneParam(FAyncLoadLevelDelegate, bool /*ok*/);
@@ -29,7 +30,7 @@ public:
 	void PrintDebugMessageOnScreen(int32 Key, float TimeToDisplay, FColor DisplayColor, const FString& DebugMessage, bool bNewerOnTop = true, const FVector2D& TextScale = FVector2D::UnitVector);
 
 	void CreateLocalRole();
-	void CreateRemoteRole(const FString& roleName);
+	AMinorRole* CreateRemoteRole(const FString& roleName);
 
 	AMainRole* GetLocalRole();
 	AMinorRole* GetMinorRole(const FString& roleName);
@@ -57,7 +58,8 @@ private:
 
 	class UTcpClient* m_tcpClient;
 
-	TMap<FString, TSubclassOf<AMinorRole>> m_mapRoleNameToMinorRoleModel;
+	TMap<FString, AMinorRole*> m_mapRoleNameToMinorRoleModel;
+
 };
 
 #define LBGC_INSTANCE ULBGCGameInstance::GetInstance()
