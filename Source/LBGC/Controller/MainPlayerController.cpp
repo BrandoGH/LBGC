@@ -11,6 +11,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include <AIController.h>
 #include <GameFramework/Character.h>
 #include <GameFramework/PawnMovementComponent.h>
+#include <Kismet/KismetMathLibrary.h>
 
 AMainPlayerController::AMainPlayerController()
 {
@@ -55,7 +56,6 @@ void AMainPlayerController::OnRoleInfoUpdateSC(const uint8* msg)
 		FString::Printf(TEXT("alter [%s] location to X[%04lf] Y[%04lf] Z[%04lf]"),
 			*scRoleName, sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double));
 
-
 	AMinorRole* minorRole = LBGC_INSTANCE->GetMinorRole(scRoleName);
 	if (!minorRole)
 	{
@@ -63,8 +63,16 @@ void AMainPlayerController::OnRoleInfoUpdateSC(const uint8* msg)
 	}
 
 	FVector VecTarget = FVector(sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double);
-	FVector VecnterpT = FMath::VInterpTo(minorRole->GetMovementComponent()->GetActorLocation(), VecTarget, LBGC_INSTANCE->GetTickDeltaSeconds(), 0.f);
-	minorRole->SetActorLocation(VecnterpT);
+
+	FRotator CurRot = minorRole->GetActorRotation();
+	FRotator TargetRot = UKismetMathLibrary::FindLookAtRotation(minorRole->GetActorLocation(), VecTarget);
+	TargetRot.Pitch = CurRot.Pitch;
+	TargetRot.Roll = CurRot.Roll;
+
+	FRotator RotInterp = FMath::RInterpTo(CurRot, TargetRot, LBGC_INSTANCE->GetTickDeltaSeconds(), 300.f);
+	FVector VecInterp = FMath::VInterpTo(minorRole->GetActorLocation(), VecTarget, LBGC_INSTANCE->GetTickDeltaSeconds(), 0.f);
+
+	minorRole->SetActorLocationAndRotation(VecInterp, RotInterp);
 	
 }
 

@@ -29,6 +29,7 @@ void AMinorRole::BeginPlay()
 	if (GetCharacterMovement())
 	{
 		GetCharacterMovement()->bOrientRotationToMovement = true;
+		GetCharacterMovement()->RotationRate = FRotator(0.f, 300.f, 0.f);
 	}
 }
 
