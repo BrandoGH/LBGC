@@ -26,6 +26,29 @@ void AMainPlayerController::BeginPlay()
 void AMainPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (m_minorRole)
+	{
+		FVector checkLocation = m_minorRole->GetActorLocation();
+		checkLocation.Z = 0.f;
+		FVector checkLocation2 = m_vecTarget;
+		checkLocation2.Z = 0.f;
+
+		if (checkLocation != checkLocation2)
+		{
+			FRotator CurRot = m_minorRole->GetActorRotation();
+			FRotator TargetRot = UKismetMathLibrary::FindLookAtRotation(m_minorRole->GetActorLocation(), m_vecTarget);
+			TargetRot.Pitch = CurRot.Pitch;
+			TargetRot.Roll = CurRot.Roll;
+
+			m_lastRotInterp = FMath::RInterpTo(CurRot, TargetRot, DeltaTime, 3.f);
+			m_minorRole->SetActorRotation(m_lastRotInterp);
+		}
+
+		m_lastVecInterp = FMath::VInterpTo(m_minorRole->GetActorLocation(), m_vecTarget, DeltaTime, 0.f);
+		m_minorRole->SetActorLocation(m_vecTarget);
+	}
+	
 }
 
 void AMainPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -56,7 +79,10 @@ void AMainPlayerController::OnRoleInfoUpdateSC(const uint8* msg)
 		FString::Printf(TEXT("alter [%s] location to X[%04lf] Y[%04lf] Z[%04lf]"),
 			*scRoleName, sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double));
 
-	AMinorRole* minorRole = LBGC_INSTANCE->GetMinorRole(scRoleName);
+	m_minorRole = LBGC_INSTANCE->GetMinorRole(scRoleName);
+	m_vecTarget = FVector(sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double);
+
+	/*AMinorRole* minorRole = LBGC_INSTANCE->GetMinorRole(scRoleName);
 	if (!minorRole)
 	{
 		return;
@@ -72,7 +98,7 @@ void AMainPlayerController::OnRoleInfoUpdateSC(const uint8* msg)
 	FRotator RotInterp = FMath::RInterpTo(CurRot, TargetRot, LBGC_INSTANCE->GetTickDeltaSeconds(), 300.f);
 	FVector VecInterp = FMath::VInterpTo(minorRole->GetActorLocation(), VecTarget, LBGC_INSTANCE->GetTickDeltaSeconds(), 0.f);
 
-	minorRole->SetActorLocationAndRotation(VecInterp, RotInterp);
+	minorRole->SetActorLocationAndRotation(VecInterp, RotInterp);*/
 	
 }
 

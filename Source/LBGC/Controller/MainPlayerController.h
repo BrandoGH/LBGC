@@ -31,4 +31,10 @@ private:
 
 private:
 	FMsgCallbackToExpectMsg m_dgMsgCreateRoleSC;
+
+	class AMinorRole* m_minorRole = NULL;
+	FVector m_vecTarget;
+
+	FRotator m_lastRotInterp;
+	FVector m_lastVecInterp;
 };
