@@ -9,6 +9,8 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include <Kismet/GameplayStatics.h>
 #include "../MsgModule/Msg/MsgRoleInfoUpdate.h"
 #include <AIController.h>
+#include <GameFramework/Character.h>
+#include <GameFramework/PawnMovementComponent.h>
 
 AMainPlayerController::AMainPlayerController()
 {
@@ -54,14 +56,15 @@ void AMainPlayerController::OnRoleInfoUpdateSC(const uint8* msg)
 			*scRoleName, sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double));
 
 
-	FVector VecTarget = FVector(sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double);
 	AMinorRole* minorRole = LBGC_INSTANCE->GetMinorRole(scRoleName);
 	if (!minorRole)
 	{
 		return;
 	}
 
-	minorRole->SetActorLocation(VecTarget);
+	FVector VecTarget = FVector(sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double);
+	FVector VecnterpT = FMath::VInterpTo(minorRole->GetMovementComponent()->GetActorLocation(), VecTarget, LBGC_INSTANCE->GetTickDeltaSeconds(), 0.f);
+	minorRole->SetActorLocation(VecnterpT);
 	
 }
 

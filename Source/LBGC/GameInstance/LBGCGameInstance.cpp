@@ -55,6 +55,15 @@ void ULBGCGameInstance::PrintDebugMessageOnScreen(int32 Key, float TimeToDisplay
 #endif // LBGS_DEBUG
 }
 
+float ULBGCGameInstance::GetTickDeltaSeconds()
+{
+	if (!GetWorld())
+	{
+		return 0.f;
+	}
+	return GetWorld()->GetDeltaSeconds();
+}
+
 ULBGCGameInstance* ULBGCGameInstance::instance = NULL;
 void ULBGCGameInstance::CreateLocalRole()
 {
