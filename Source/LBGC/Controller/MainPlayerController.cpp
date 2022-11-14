@@ -46,7 +46,7 @@ void AMainPlayerController::Tick(float DeltaTime)
 		}
 
 		m_lastVecInterp = FMath::VInterpTo(m_minorRole->GetActorLocation(), m_vecTarget, DeltaTime, 0.f);
-		m_minorRole->SetActorLocation(m_vecTarget);
+		m_minorRole->SetActorLocation(m_lastVecInterp);
 	}
 	
 }
@@ -81,25 +81,6 @@ void AMainPlayerController::OnRoleInfoUpdateSC(const uint8* msg)
 
 	m_minorRole = LBGC_INSTANCE->GetMinorRole(scRoleName);
 	m_vecTarget = FVector(sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double);
-
-	/*AMinorRole* minorRole = LBGC_INSTANCE->GetMinorRole(scRoleName);
-	if (!minorRole)
-	{
-		return;
-	}
-
-	FVector VecTarget = FVector(sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double);
-
-	FRotator CurRot = minorRole->GetActorRotation();
-	FRotator TargetRot = UKismetMathLibrary::FindLookAtRotation(minorRole->GetActorLocation(), VecTarget);
-	TargetRot.Pitch = CurRot.Pitch;
-	TargetRot.Roll = CurRot.Roll;
-
-	FRotator RotInterp = FMath::RInterpTo(CurRot, TargetRot, LBGC_INSTANCE->GetTickDeltaSeconds(), 300.f);
-	FVector VecInterp = FMath::VInterpTo(minorRole->GetActorLocation(), VecTarget, LBGC_INSTANCE->GetTickDeltaSeconds(), 0.f);
-
-	minorRole->SetActorLocationAndRotation(VecInterp, RotInterp);*/
-	
 }
 
 void AMainPlayerController::SendCreateRoleModel()
