@@ -107,7 +107,7 @@ void AMainRole::InitWhenBeginPlay()
 	if (GetCharacterMovement())
 	{
 		GetCharacterMovement()->bOrientRotationToMovement = true;
-		GetCharacterMovement()->RotationRate = FRotator(0.f, 300.f, 0.f);
+		GetCharacterMovement()->RotationRate = FRotator(0.f, 100.f, 0.f);
 		GetCharacterMovement()->JumpZVelocity = 400.f;
 		GetCharacterMovement()->GravityScale = 1.2f;
 		GetCharacterMovement()->AirControl = 0.2f;
@@ -149,9 +149,7 @@ void AMainRole::SendUpdateRoleInfo()
 
 		uint8 sendData[sizeof(MsgRoleInfoUpdateCS)];
 		memset(sendData, 0, sizeof(sendData));
-		memmove(sendData, cs.m_roleX.m_bytes, sizeof(MsgDouble));
-		memmove(sendData + sizeof(MsgDouble), cs.m_roleY.m_bytes, sizeof(MsgDouble));
-		memmove(sendData + sizeof(MsgDouble) * 2, cs.m_roleZ.m_bytes, sizeof(MsgDouble));
+		memmove(sendData, (const char*)&cs, sizeof(MsgRoleInfoUpdateCS));
 
 		LBGC_INSTANCE->GetTcpClient()->Send(sendData, sizeof(sendData), MSG_TYPE_ROLE_INFO_UPDATE_CS, expect);
 

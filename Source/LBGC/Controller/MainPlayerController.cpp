@@ -41,7 +41,7 @@ void AMainPlayerController::Tick(float DeltaTime)
 			TargetRot.Pitch = CurRot.Pitch;
 			TargetRot.Roll = CurRot.Roll;
 
-			m_lastRotInterp = FMath::RInterpTo(CurRot, TargetRot, DeltaTime, 2.5f);
+			m_lastRotInterp = FMath::RInterpTo(CurRot, TargetRot, DeltaTime, 3.5f);
 			m_minorRole->SetActorRotation(m_lastRotInterp);
 		}
 
