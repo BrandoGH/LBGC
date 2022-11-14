@@ -32,6 +32,7 @@ AMainRole::AMainRole()
 	, CompSpringArm(NULL)
 	, CompCamera(NULL)
 	, m_bSpeedUp(false)
+	, m_bJumping(false)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -69,6 +70,11 @@ void AMainRole::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	SendUpdateRoleInfo();
+
+	if (GetCharacterMovement())
+	{
+		m_bJumping = GetCharacterMovement()->IsFalling();
+	}
 }
 
 void AMainRole::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -157,7 +163,7 @@ void AMainRole::SendUpdateRoleInfo()
 
 void AMainRole::MoveControl(EAxis::Type type, float fValue)
 {
-	if (!Controller)
+	if (!Controller || m_bJumping)
 	{
 		return;
 	}
@@ -213,11 +219,9 @@ void AMainRole::OnSlowDown()
 void AMainRole::OnJump()
 {
 	Super::Jump();
-
 }
 
 void AMainRole::OnStopJumping()
 {
 	Super::StopJumping();
-
 }

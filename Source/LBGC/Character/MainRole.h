@@ -57,4 +57,6 @@ private:
 	bool m_bSpeedUp;
 	FVector m_vecLastLocation;
 	FMsgCallbackToExpectMsg m_dgMsgRoleInfoUpdateCS;
+
+	bool m_bJumping;
 };
