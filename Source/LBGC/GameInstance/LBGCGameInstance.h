@@ -30,8 +30,8 @@ public:
 	void PrintDebugMessageOnScreen(int32 Key, float TimeToDisplay, FColor DisplayColor, const FString& DebugMessage, bool bNewerOnTop = true, const FVector2D& TextScale = FVector2D::UnitVector);
 	float GetTickDeltaSeconds();
 
-	void CreateLocalRole();
-	AMinorRole* CreateRemoteRole(const FString& roleName);
+	void CreateLocalRole(const FVector& location);
+	AMinorRole* CreateRemoteRole(const FString& roleName, const FVector& location);
 
 	AMainRole* GetLocalRole();
 	AMinorRole* GetMinorRole(const FString& roleName);

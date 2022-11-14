@@ -41,7 +41,7 @@ void AMainPlayerController::Tick(float DeltaTime)
 			TargetRot.Pitch = CurRot.Pitch;
 			TargetRot.Roll = CurRot.Roll;
 
-			m_lastRotInterp = FMath::RInterpTo(CurRot, TargetRot, DeltaTime, 3.5f);
+			m_lastRotInterp = FMath::RInterpTo(CurRot, TargetRot, DeltaTime, 4.f);
 			m_minorRole->SetActorRotation(m_lastRotInterp);
 		}
 
@@ -126,14 +126,14 @@ void AMainPlayerController::OnMsgCreateRoleSC(const uint8* msg)
 			return;
 		}
 
-		LBGC_INSTANCE->CreateLocalRole();
+		LBGC_INSTANCE->CreateLocalRole(FVector(sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double));
 		localRole->Login();
 		LBGC_INSTANCE->PrintDebugMessageOnScreen(-1, 1000.f, FColor::Yellow, FString::Printf(TEXT("Has create myself: %s"), *localRoleName));
 		return;
 	}
 
 	// create other role
-	AMinorRole* minorRole = LBGC_INSTANCE->CreateRemoteRole(willCreateRoleName);
+	AMinorRole* minorRole = LBGC_INSTANCE->CreateRemoteRole(willCreateRoleName, FVector(sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double));
 	if (minorRole)
 	{
 		minorRole->SetRoleName(willCreateRoleName);

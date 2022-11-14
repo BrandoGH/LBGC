@@ -107,7 +107,7 @@ void AMainRole::InitWhenBeginPlay()
 	if (GetCharacterMovement())
 	{
 		GetCharacterMovement()->bOrientRotationToMovement = true;
-		GetCharacterMovement()->RotationRate = FRotator(0.f, 100.f, 0.f);
+		GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
 		GetCharacterMovement()->JumpZVelocity = 400.f;
 		GetCharacterMovement()->GravityScale = 1.2f;
 		GetCharacterMovement()->AirControl = 0.2f;

@@ -11,8 +11,6 @@ PRAGMA_DISABLE_OPTIMIZATION
 
 namespace
 {
-const FVector g_vecDefaultCreateMainRoleLoc = FVector(0.f, 0.f, 190.f);
-const FVector g_vecDefaultCreateMinorRoleLoc = FVector(0.f, 0.f, 88.f);
 }
 
 void ULBGCGameInstance::Init()
@@ -65,22 +63,22 @@ float ULBGCGameInstance::GetTickDeltaSeconds()
 }
 
 ULBGCGameInstance* ULBGCGameInstance::instance = NULL;
-void ULBGCGameInstance::CreateLocalRole()
+void ULBGCGameInstance::CreateLocalRole(const FVector& location)
 {
 	if (GetWorld())
 	{
-		GetWorld()->SpawnActor<AMainRole>(SpawnLocalRole, g_vecDefaultCreateMainRoleLoc, FRotator(0.f));
+		GetWorld()->SpawnActor<AMainRole>(SpawnLocalRole, location, FRotator(0.f));
 	}
 }
 
-AMinorRole* ULBGCGameInstance::CreateRemoteRole(const FString& roleName)
+AMinorRole* ULBGCGameInstance::CreateRemoteRole(const FString& roleName, const FVector& location)
 {
 	if (!GetWorld())
 	{
 		return NULL;
 	}
 	m_mapRoleNameToMinorRoleModel.Emplace(roleName, 
-		GetWorld()->SpawnActor<AMinorRole>(SpawnRemoteRole, g_vecDefaultCreateMinorRoleLoc, FRotator(0.f)));
+		GetWorld()->SpawnActor<AMinorRole>(SpawnRemoteRole, location, FRotator(0.f)));
 	
 	return GetMinorRole(roleName);
 }

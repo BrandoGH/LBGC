@@ -22,8 +22,14 @@ struct MsgCreateRoleSC
 	MsgCreateRoleSC()
 	{
 		memset(m_strCreateRoleName, 0, sizeof(m_strCreateRoleName));
+		m_roleX = 0.0;
+		m_roleY = 0.0;
+		m_roleZ = 0.0;
 	}
 	int8 m_strCreateRoleName[NSTcpClient::g_nRoleNameSize];
+	MsgDouble m_roleX;
+	MsgDouble m_roleY;
+	MsgDouble m_roleZ;
 };
 
 #pragma pack(pop)
