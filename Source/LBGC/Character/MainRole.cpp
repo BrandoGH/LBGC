@@ -119,7 +119,8 @@ void AMainRole::InitWhenBeginPlay()
 		GetCharacterMovement()->AirControl = 0.2f;
 		GetCharacterMovement()->SetWalkableFloorAngle(46.f);
 		GetCharacterMovement()->MaxWalkSpeed = g_fWalkSeepdDefault;
-		GetCharacterMovement()->MaxAcceleration = 300.f;
+		GetCharacterMovement()->MaxAcceleration = 768.f;
+		GetCharacterMovement()->BrakingDecelerationWalking = 0.f;
 	}
 
 }

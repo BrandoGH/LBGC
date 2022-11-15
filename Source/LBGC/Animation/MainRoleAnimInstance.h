@@ -13,5 +13,27 @@ UCLASS()
 class LBGC_API UMainRoleAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
+
+public:
+	UMainRoleAnimInstance();
+	virtual void NativeInitializeAnimation() override;
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "UMainRoleAnimInstance Func")
+		void UpdateAnimationProperties(float fDeltaSeconds);
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMainRoleAnimInstance Var")
+		float MoveSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMainRoleAnimInstance Var")
+		bool IsJumping;
+
+private:
+	bool CheckMainRole();
+
+private:
+	class AMainRole* m_mainRole;
 	
 };
