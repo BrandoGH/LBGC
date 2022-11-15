@@ -18,6 +18,12 @@ AMinorRole::AMinorRole()
 		GetMesh()->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -88.f), FRotator(0.f, -90.f, 0.f));
 	}
 
+	if (GetCharacterMovement())
+	{
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+		GetCharacterMovement()->RotationRate = FRotator(0.f, 300.f, 0.f);
+	}
+
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 }
@@ -25,12 +31,6 @@ AMinorRole::AMinorRole()
 void AMinorRole::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (GetCharacterMovement())
-	{
-		GetCharacterMovement()->bOrientRotationToMovement = true;
-		GetCharacterMovement()->RotationRate = FRotator(0.f, 300.f, 0.f);
-	}
 }
 
 void AMinorRole::Tick(float DeltaTime)

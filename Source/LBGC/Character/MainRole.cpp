@@ -17,7 +17,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 namespace
 {
 const float g_fSpringArmLength = 300.f;
-const float g_fWalkSeepdDefault = 300.f;
+const float g_fWalkSeepdDefault = 200.f;
 const float g_fWalkSeepdUp = 600.f;
 
 const FVector g_vecThirdView = FVector(0.f, 0.f, 63.f);
@@ -56,14 +56,26 @@ AMainRole::AMainRole()
 	{
 		GetMesh()->SetRelativeLocationAndRotation(g_vecMeshDefault, g_rotMeshDefault);
 	}
+
+	if (GetCharacterMovement())
+	{
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+		GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
+		GetCharacterMovement()->JumpZVelocity = 400.f;
+		GetCharacterMovement()->GravityScale = 1.2f;
+		GetCharacterMovement()->AirControl = 0.2f;
+		GetCharacterMovement()->SetWalkableFloorAngle(46.f);
+		GetCharacterMovement()->MaxWalkSpeed = g_fWalkSeepdDefault;
+		GetCharacterMovement()->MaxAcceleration = 768.f;
+		GetCharacterMovement()->BrakingDecelerationWalking = 0.f;
+	}
+
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
 
 void AMainRole::BeginPlay()
 {
 	Super::BeginPlay();
-
-	InitWhenBeginPlay();
 }
 
 void AMainRole::Tick(float DeltaTime)
@@ -106,23 +118,6 @@ void AMainRole::Login()
 void AMainRole::Logout()
 {
 	SetCreateModelFlag(false);
-}
-
-void AMainRole::InitWhenBeginPlay()
-{
-	if (GetCharacterMovement())
-	{
-		GetCharacterMovement()->bOrientRotationToMovement = true;
-		GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
-		GetCharacterMovement()->JumpZVelocity = 400.f;
-		GetCharacterMovement()->GravityScale = 1.2f;
-		GetCharacterMovement()->AirControl = 0.2f;
-		GetCharacterMovement()->SetWalkableFloorAngle(46.f);
-		GetCharacterMovement()->MaxWalkSpeed = g_fWalkSeepdDefault;
-		GetCharacterMovement()->MaxAcceleration = 768.f;
-		GetCharacterMovement()->BrakingDecelerationWalking = 0.f;
-	}
-
 }
 
 void AMainRole::SendUpdateRoleInfo()

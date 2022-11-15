@@ -33,7 +33,6 @@ public:
 	virtual void Logout() override;
 
 private:
-	void InitWhenBeginPlay();
 	void SendUpdateRoleInfo();
 
 	void MoveControl(EAxis::Type type, float fValue);
