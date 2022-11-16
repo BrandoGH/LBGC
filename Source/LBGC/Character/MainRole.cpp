@@ -21,7 +21,7 @@ const float g_fWalkSeepdDefault = 200.f;
 const float g_fWalkSeepdUp = 600.f;
 
 const FVector g_vecThirdView = FVector(0.f, 0.f, 63.f);
-const FVector g_vecMeshDefault = FVector(0.f, 0.f, -88.f);
+const FVector g_vecMeshDefault = FVector(0.f, 0.f, -91.f);
 const FRotator g_rotMeshDefault = FRotator(0.f, -90.f, 0.f);
 const FVector g_vecSocketOffset = FVector(0.f, 90.f, 30.f);
 const FVector g_vecCameraLocDefault = FVector(4.f, -5.f, 19.f);

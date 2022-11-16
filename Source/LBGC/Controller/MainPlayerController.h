@@ -28,6 +28,7 @@ private:
 	void SendCreateRoleModel();
 	void OnMsgCreateRoleSC(const uint8* msg);
 
+	void SyncMinorRoleInfo(float DeltaTime);
 
 private:
 	FMsgCallbackToExpectMsg m_dgMsgCreateRoleSC;

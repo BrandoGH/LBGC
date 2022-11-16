@@ -28,35 +28,7 @@ void AMainPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (m_minorRole)
-	{
-		FVector checkLocation = m_minorRole->GetActorLocation();
-		checkLocation.Z = 0.f;
-		FVector checkLocation2 = m_vecTarget;
-		checkLocation2.Z = 0.f;
-
-		if (checkLocation != checkLocation2)
-		{
-			FRotator CurRot = m_minorRole->GetActorRotation();
-			FRotator TargetRot = UKismetMathLibrary::FindLookAtRotation(m_minorRole->GetActorLocation(), m_vecTarget);
-			TargetRot.Pitch = CurRot.Pitch;
-			TargetRot.Roll = CurRot.Roll;
-
-			m_lastRotInterp = FMath::RInterpTo(CurRot, TargetRot, DeltaTime, 4.f);
-			m_minorRole->SetActorRotation(m_lastRotInterp);
-		}
-
-		m_lastVecInterp = FMath::VInterpTo(m_minorRole->GetActorLocation(), m_vecTarget, DeltaTime, 0.f);
-
-		
-		AAIController* AI = m_minorRole->GetController<AAIController>();
-		if (AI)
-		{
-			AI->MoveToLocation(m_lastVecInterp);
-			m_minorRole->SetActorLocation(m_lastVecInterp);
-		}
-	}
-	
+	SyncMinorRoleInfo(DeltaTime);
 }
 
 void AMainPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -156,4 +128,37 @@ void AMainPlayerController::OnMsgCreateRoleSC(const uint8* msg)
 	}
 
 	LBGC_INSTANCE->PrintDebugMessageOnScreen(-1, 1000.f, FColor::Yellow, FString::Printf(TEXT("%s: shuold create other role[%s] on my clients"), *localRoleName, *willCreateRoleName));
+}
+
+void AMainPlayerController::SyncMinorRoleInfo(float DeltaTime)
+{
+	if (!m_minorRole)
+	{
+		return;
+	}
+
+	FVector checkLocation = m_minorRole->GetActorLocation();
+	checkLocation.Z = 0.f;
+	FVector checkLocation2 = m_vecTarget;
+	checkLocation2.Z = 0.f;
+
+	// way to rotate by itself while still
+	if (checkLocation != checkLocation2)
+	{
+		FRotator CurRot = m_minorRole->GetActorRotation();
+		FRotator TargetRot = UKismetMathLibrary::FindLookAtRotation(m_minorRole->GetActorLocation(), m_vecTarget);
+		TargetRot.Pitch = CurRot.Pitch;
+		TargetRot.Roll = CurRot.Roll;
+
+		m_lastRotInterp = FMath::RInterpTo(CurRot, TargetRot, DeltaTime, 4.f);
+		m_minorRole->SetActorRotation(m_lastRotInterp);
+	}
+
+	m_lastVecInterp = FMath::VInterpTo(m_minorRole->GetActorLocation(), m_vecTarget, DeltaTime, 0.f);
+	AAIController* AI = m_minorRole->GetController<AAIController>();
+	if (AI)
+	{
+		AI->MoveToLocation(m_lastVecInterp);
+		m_minorRole->SetActorLocation(m_lastVecInterp);
+	}
 }
