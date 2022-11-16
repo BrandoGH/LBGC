@@ -27,7 +27,7 @@ void UMinorRoleAnimInstance::UpdateAnimationProperties(float fDeltaSeconds)
 {
 	if (!CheckMinorRole()) { return; }
 
-	MoveSpeed = m_MinorRole->GetMoveSpeed();
+	MoveSpeed = m_MinorRole->GetMoveVelocity();
 	IsJumping = m_MinorRole->IsJumping();
 }
 

@@ -26,7 +26,7 @@ AMinorRole::AMinorRole()
 		GetCharacterMovement()->JumpZVelocity = 400.f;
 		GetCharacterMovement()->GravityScale = 1.2f;
 		GetCharacterMovement()->AirControl = 0.2f;
-		GetCharacterMovement()->MaxWalkSpeed = 200.f;
+		GetCharacterMovement()->MaxWalkSpeed = 0.f;
 		GetCharacterMovement()->MaxAcceleration = 768.f;
 		GetCharacterMovement()->BrakingDecelerationWalking = 0.f;
 	}

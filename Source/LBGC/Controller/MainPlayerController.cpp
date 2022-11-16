@@ -48,19 +48,13 @@ void AMainPlayerController::Tick(float DeltaTime)
 
 		m_lastVecInterp = FMath::VInterpTo(m_minorRole->GetActorLocation(), m_vecTarget, DeltaTime, 0.f);
 
-		if (m_minorRole->IsJumping())
+		
+		AAIController* AI = m_minorRole->GetController<AAIController>();
+		if (AI)
 		{
+			AI->MoveToLocation(m_lastVecInterp);
 			m_minorRole->SetActorLocation(m_lastVecInterp);
 		}
-		else
-		{
-			AAIController* AI = m_minorRole->GetController<AAIController>();
-			if (AI)
-			{
-				AI->MoveToLocation(m_lastVecInterp);
-			}
-		}
-		
 	}
 	
 }
