@@ -20,14 +20,14 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "UMainRoleAnimInstance Func")
+	UFUNCTION(BlueprintCallable, Category = "UMinorRoleAnimInstance Func")
 		void UpdateAnimationProperties(float fDeltaSeconds);
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMainRoleAnimInstance Var")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMinorRoleAnimInstance Var")
 		float MoveSpeed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMainRoleAnimInstance Var")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMinorRoleAnimInstance Var")
 		bool IsJumping;
 
 private:

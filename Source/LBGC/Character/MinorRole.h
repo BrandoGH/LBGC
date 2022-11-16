@@ -29,4 +29,13 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void Login() override;
+
+	void SetMoveVelocity(uint16 velocity);
+	uint16 GetMoveVelocity();
+
+	void SetJumping(bool bJump) { m_bJumping = bJump; }
+	bool IsJumping() { return m_bJumping; }
+
+private:
+	bool m_bJumping;
 };

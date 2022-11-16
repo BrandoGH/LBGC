@@ -49,7 +49,7 @@ void ARoleBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 float ARoleBase::GetMoveSpeed()
 {
 	FVector velocity = GetVelocity();
-	velocity.Z = 0;	
+	velocity.Z = 0;
 	return velocity.Size();
 }
 

@@ -47,12 +47,20 @@ void AMainPlayerController::Tick(float DeltaTime)
 		}
 
 		m_lastVecInterp = FMath::VInterpTo(m_minorRole->GetActorLocation(), m_vecTarget, DeltaTime, 0.f);
-		//m_minorRole->SetActorLocation(m_lastVecInterp);
-		AAIController* AI = m_minorRole->GetController<AAIController>();
-		if (AI)
+
+		if (m_minorRole->IsJumping())
 		{
-			AI->MoveToLocation(m_lastVecInterp);
+			m_minorRole->SetActorLocation(m_lastVecInterp);
 		}
+		else
+		{
+			AAIController* AI = m_minorRole->GetController<AAIController>();
+			if (AI)
+			{
+				AI->MoveToLocation(m_lastVecInterp);
+			}
+		}
+		
 	}
 	
 }
@@ -81,17 +89,18 @@ void AMainPlayerController::OnRoleInfoUpdateSC(const uint8* msg)
 	}
 
 	FString scRoleName = FString(strlen((const char*)sc->m_targetRoleName), (const char*)sc->m_targetRoleName);
-	LBGC_INSTANCE->PrintDebugMessageOnScreen(0, 1000.f, FColor::Yellow,
-		FString::Printf(TEXT("alter [%s] location to X[%04lf] Y[%04lf] Z[%04lf]"),
-			*scRoleName, sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double));
-
 	m_minorRole = LBGC_INSTANCE->GetMinorRole(scRoleName);
 	m_vecTarget = FVector(sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double);
 
 	if (m_minorRole)
 	{
-		m_minorRole->GetCharacterMovement()->MaxWalkSpeed = sc->m_velocity;
+		m_minorRole->SetMoveVelocity(sc->m_velocity);
+		m_minorRole->SetJumping((sc->m_jumpFlag == MsgRoleInfoUpdateCS::EJF_JUMPING) ? true : false);
 	}
+
+	LBGC_INSTANCE->PrintDebugMessageOnScreen(0, 1000.f, FColor::Yellow,
+		FString::Printf(TEXT("alter [%s] location to X[%04lf] Y[%04lf] Z[%04lf] m_velocity[%d] m_jumpFlag[%d]"),
+			*scRoleName, sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double, sc->m_velocity, sc->m_jumpFlag));
 
 }
 
