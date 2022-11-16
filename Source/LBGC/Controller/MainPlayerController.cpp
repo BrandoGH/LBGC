@@ -12,6 +12,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include <GameFramework/Character.h>
 #include <GameFramework/PawnMovementComponent.h>
 #include <Kismet/KismetMathLibrary.h>
+#include "GameFramework/CharacterMovementComponent.h"
 
 AMainPlayerController::AMainPlayerController()
 {
@@ -86,6 +87,12 @@ void AMainPlayerController::OnRoleInfoUpdateSC(const uint8* msg)
 
 	m_minorRole = LBGC_INSTANCE->GetMinorRole(scRoleName);
 	m_vecTarget = FVector(sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double);
+
+	if (m_minorRole)
+	{
+		m_minorRole->GetCharacterMovement()->MaxWalkSpeed = sc->m_velocity;
+	}
+
 }
 
 void AMainPlayerController::SendCreateRoleModel()

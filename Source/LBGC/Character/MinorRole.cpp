@@ -22,6 +22,9 @@ AMinorRole::AMinorRole()
 	{
 		GetCharacterMovement()->bOrientRotationToMovement = true;
 		GetCharacterMovement()->RotationRate = FRotator(0.f, 300.f, 0.f);
+		GetCharacterMovement()->MaxWalkSpeed = 200.f;
+		GetCharacterMovement()->MaxAcceleration = 768.f;
+		GetCharacterMovement()->BrakingDecelerationWalking = 0.f;
 	}
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;

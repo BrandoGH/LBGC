@@ -29,9 +29,7 @@ void UMainRoleAnimInstance::UpdateAnimationProperties(float fDeltaSeconds)
 {
 	if (!CheckMainRole()) { return; }
 
-	FVector velocity = m_mainRole->GetVelocity();
-	velocity.Z = 0;	// not deed jump z
-	MoveSpeed = velocity.Size();
+	MoveSpeed = m_mainRole->GetMoveSpeed();
 	if (m_mainRole->GetMovementComponent())
 	{
 		IsJumping = m_mainRole->GetMovementComponent()->IsFalling();

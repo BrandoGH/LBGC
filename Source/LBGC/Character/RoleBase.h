@@ -33,6 +33,8 @@ public:
 	void SetCreateModelFlag(bool bCreate) { m_bCreateModel = bCreate; }
 	bool IsCreateModel() { return m_bCreateModel; }
 
+	float GetMoveSpeed();
+
 protected:
 	void CollisionPresets();
 

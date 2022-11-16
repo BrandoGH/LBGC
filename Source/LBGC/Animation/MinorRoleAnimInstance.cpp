@@ -27,17 +27,10 @@ void UMinorRoleAnimInstance::UpdateAnimationProperties(float fDeltaSeconds)
 {
 	if (!CheckMinorRole()) { return; }
 
-	FVector velocity = m_MinorRole->GetVelocity();
-	velocity.Z = 0;	// not deed jump z
-	MoveSpeed = velocity.Size();
+	MoveSpeed = m_MinorRole->GetMoveSpeed();
 	if (m_MinorRole->GetMovementComponent())
 	{
 		IsJumping = m_MinorRole->GetMovementComponent()->IsFalling();
-	}
-
-	if (LBGC_INSTANCE)
-	{
-		LBGC_INSTANCE->PrintDebugMessageOnScreen(0,10.f,FColor::Yellow, FString::Printf(TEXT("velocity[%f,%f]  IsJumping[%d]"),velocity.X, velocity.Y, IsJumping));
 	}
 }
 

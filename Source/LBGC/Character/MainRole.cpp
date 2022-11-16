@@ -142,18 +142,24 @@ void AMainRole::SendUpdateRoleInfo()
 	cs.m_roleX = m_vecLastLocation.X;
 	cs.m_roleY = m_vecLastLocation.Y;
 	cs.m_roleZ = m_vecLastLocation.Z;
-		m_dgMsgRoleInfoUpdateCS.BindUObject(
-			Cast<AMainPlayerController>(LBGC_INSTANCE->GetLocalRoleController()),
-			&AMainPlayerController::OnRoleInfoUpdateSC);
-		UTcpClient::ExpectMsgStruct expect;
-		expect.ExpectMsgType = MSG_TYPE_ROLE_INFO_UPDATE_SC;
-		expect.ExpectDg = m_dgMsgRoleInfoUpdateCS;
+	cs.m_velocity = GetMoveSpeed();
+	if (GetCharacterMovement())
+	{
+		cs.m_jumpFlag = GetCharacterMovement()->IsFalling() ? MsgRoleInfoUpdateCS::EJF_JUMPING : MsgRoleInfoUpdateCS::EJF_NORMAL;
+	}
 
-		uint8 sendData[sizeof(MsgRoleInfoUpdateCS)];
-		memset(sendData, 0, sizeof(sendData));
-		memmove(sendData, (const char*)&cs, sizeof(MsgRoleInfoUpdateCS));
+	m_dgMsgRoleInfoUpdateCS.BindUObject(
+		Cast<AMainPlayerController>(LBGC_INSTANCE->GetLocalRoleController()),
+		&AMainPlayerController::OnRoleInfoUpdateSC);
+	UTcpClient::ExpectMsgStruct expect;
+	expect.ExpectMsgType = MSG_TYPE_ROLE_INFO_UPDATE_SC;
+	expect.ExpectDg = m_dgMsgRoleInfoUpdateCS;
 
-		LBGC_INSTANCE->GetTcpClient()->Send(sendData, sizeof(sendData), MSG_TYPE_ROLE_INFO_UPDATE_CS, expect);
+	uint8 sendData[sizeof(MsgRoleInfoUpdateCS)];
+	memset(sendData, 0, sizeof(sendData));
+	memmove(sendData, (const char*)&cs, sizeof(MsgRoleInfoUpdateCS));
+
+	LBGC_INSTANCE->GetTcpClient()->Send(sendData, sizeof(sendData), MSG_TYPE_ROLE_INFO_UPDATE_CS, expect);
 
 }
 
