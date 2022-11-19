@@ -43,6 +43,8 @@ public:
 	bool IsTimerout() { return m_bTcpTimeout; }
 
 	void Send(const uint8* Data, int32 Count, int32 MsgType, const ExpectMsgStruct& Expect);
+	void RegisterMsgCallback(const ExpectMsgStruct& Expect);
+
 	void StartRead();
 	void StartSendHeart();
 

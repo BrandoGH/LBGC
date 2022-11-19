@@ -13,6 +13,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include <GameFramework/PawnMovementComponent.h>
 #include <Kismet/KismetMathLibrary.h>
 #include "GameFramework/CharacterMovementComponent.h"
+#include "../MsgModule/Msg/MsgLogout.h"
 
 AMainPlayerController::AMainPlayerController()
 {
@@ -21,6 +22,7 @@ AMainPlayerController::AMainPlayerController()
 void AMainPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+	RegisterLogoutMsg();
 	SendCreateRoleModel();
 }
 
@@ -68,6 +70,41 @@ void AMainPlayerController::OnRoleInfoUpdateSC(const uint8* msg)
 		FString::Printf(TEXT("alter [%s] location to X[%04lf] Y[%04lf] Z[%04lf] m_velocity[%d] m_jumpFlag[%d]"),
 			*scRoleName, sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double, sc->m_velocity, sc->m_jumpFlag));
 
+}
+
+void AMainPlayerController::RegisterLogoutMsg()
+{
+	if (!LBGC_INSTANCE || !LBGC_INSTANCE->GetTcpClient())
+	{
+		return;
+	}
+
+	FMsgCallbackToExpectMsg dgLogout;
+	dgLogout.BindLambda(
+		[](const uint8* msg)
+		{
+			if (!LBGC_INSTANCE)
+			{
+				return;
+			}
+			MsgLogoutSC* sc = (MsgLogoutSC*)msg;
+			if (!sc)
+			{
+				return;
+			}
+
+			FString scRoleName = FString(strlen((const char*)sc->m_strRoleName), (const char*)sc->m_strRoleName);
+			AMinorRole* minorRole = LBGC_INSTANCE->GetMinorRole(scRoleName);
+			if (minorRole)
+			{
+				minorRole->Destroy();
+			}
+		});
+
+	UTcpClient::ExpectMsgStruct expect;
+	expect.ExpectMsgType = MSG_TYPE_ROLE_MODEL_REMOVE;
+	expect.ExpectDg = dgLogout;
+	LBGC_INSTANCE->GetTcpClient()->RegisterMsgCallback(expect);
 }
 
 void AMainPlayerController::SendCreateRoleModel()

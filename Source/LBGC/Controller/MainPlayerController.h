@@ -25,6 +25,7 @@ public:
 	void OnRoleInfoUpdateSC(const uint8* msg);
 
 private:
+	void RegisterLogoutMsg();
 	void SendCreateRoleModel();
 	void OnMsgCreateRoleSC(const uint8* msg);
 

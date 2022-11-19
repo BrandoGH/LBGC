@@ -104,6 +104,11 @@ void UTcpClient::Send(const uint8* Data, int32 Count, int32 MsgType, const Expec
 	GetSocket()->Send(sendData.GetData(), sendData.Num(), byteSend);
 }
 
+void UTcpClient::RegisterMsgCallback(const ExpectMsgStruct& Expect)
+{
+	m_mapExpectMsgtypeToDelegate.Add(Expect.ExpectMsgType, Expect.ExpectDg);
+}
+
 void UTcpClient::StartRead()
 {
 	FAsyncTask<AyncTaskReader>* TaskReader = new FAsyncTask<AyncTaskReader>(m_dgReader);
