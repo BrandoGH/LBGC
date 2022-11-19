@@ -33,11 +33,11 @@ void UMainRoleAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	UpdateAnimationProperties(DeltaSeconds);
+	UpdateMainRoleAnimationProperties(DeltaSeconds);
 	UpdateFootIK(DeltaSeconds);
 }
 
-void UMainRoleAnimInstance::UpdateAnimationProperties(float fDeltaSeconds)
+void UMainRoleAnimInstance::UpdateMainRoleAnimationProperties(float fDeltaSeconds)
 {
 	if (!CheckMainRole()) { return; }
 

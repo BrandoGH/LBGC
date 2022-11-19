@@ -20,10 +20,10 @@ void UMinorRoleAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	UpdateAnimationProperties(DeltaSeconds);
+	UpdateMinorRoleAnimationProperties(DeltaSeconds);
 }
 
-void UMinorRoleAnimInstance::UpdateAnimationProperties(float fDeltaSeconds)
+void UMinorRoleAnimInstance::UpdateMinorRoleAnimationProperties(float fDeltaSeconds)
 {
 	if (!CheckMinorRole()) { return; }
 

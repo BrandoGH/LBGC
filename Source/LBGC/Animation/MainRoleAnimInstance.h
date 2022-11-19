@@ -27,37 +27,42 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "UMainRoleAnimInstance Func")
-		void UpdateAnimationProperties(float fDeltaSeconds);
+	UFUNCTION(BlueprintCallable, Category = "RoleAnimInstance Func")
+		void UpdateMainRoleAnimationProperties(float fDeltaSeconds);
 
-	UFUNCTION(BlueprintCallable, Category = "UMainRoleAnimInstance Func")
+	UFUNCTION(BlueprintCallable, Category = "RoleAnimInstance Func")
 		void UpdateFootIK(float fDeltaSeconds);
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMainRoleAnimInstance Var")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "RoleAnimInstance  Var")
 		float MoveSpeed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMainRoleAnimInstance Var")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "RoleAnimInstance  Var")
 		bool IsJumping;
 
 	// Foot IK
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMainRoleAnimInstance Var")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RoleAnimInstance  Var")
 		float LFootEffectorX;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMainRoleAnimInstance Var")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RoleAnimInstance  Var")
 		float RFootEffectorX;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UMainRoleAnimInstance Var")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RoleAnimInstance  Var")
 		float PelvisZ;
+
+protected:
+	virtual bool TraceCheckFootIK(EnFootIkTraceType type);
 
 private:
 	bool CheckMainRole();
-	bool TraceCheckFootIK(EnFootIkTraceType type);
 
-private:
-	class AMainRole* m_mainRole;
-
+protected:
 	// Foot IK
 	// The distance from the left and right feet to the ground
 	float m_fLFootGroundDistance;
 	float m_fRFootGroundDistance;
+
+private:
+	class AMainRole* m_mainRole;
+
+	
 	
 };

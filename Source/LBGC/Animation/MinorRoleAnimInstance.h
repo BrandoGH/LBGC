@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "MainRoleAnimInstance.h"
 #include "MinorRoleAnimInstance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class LBGC_API UMinorRoleAnimInstance : public UAnimInstance
+class LBGC_API UMinorRoleAnimInstance : public UMainRoleAnimInstance
 {
 	GENERATED_BODY()
 	
@@ -20,19 +21,13 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "UMinorRoleAnimInstance Func")
-		void UpdateAnimationProperties(float fDeltaSeconds);
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMinorRoleAnimInstance Var")
-		float MoveSpeed;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMinorRoleAnimInstance Var")
-		bool IsJumping;
+	UFUNCTION(BlueprintCallable, Category = "RoleAnimInstance  Func")
+		void UpdateMinorRoleAnimationProperties(float fDeltaSeconds);
 
 private:
 	bool CheckMinorRole();
 
 private:
 	class AMinorRole* m_MinorRole;
+
 };
