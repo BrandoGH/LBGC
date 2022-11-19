@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#ifdef LBGS_DEBUG
+PRAGMA_DISABLE_OPTIMIZATION
+#endif // LBGS_DEBUG
 #include "MainRoleAnimInstance.h"
 #include "../Character/MainRole.h"
 #include "GameFramework/Character.h"
@@ -74,11 +76,12 @@ void UMainRoleAnimInstance::UpdateFootIK(float fDeltaSeconds)
 		RFootEffectorX = FMath::FInterpTo(RFootEffectorX, 0.f, fDeltaSeconds, g_fFootIkInterpSpeed);
 	}
 
-	if (LBGC_INSTANCE)
+
+	/*if (LBGC_INSTANCE)
 	{
 		LBGC_INSTANCE->PrintDebugMessageOnScreen(-1, 5.f, FColor::Red, 
 			FString::Printf(TEXT("m_fLFootGroundDistance[%02f]£¬ m_fRFootGroundDistance[%02f]"), m_fLFootGroundDistance, m_fRFootGroundDistance));
-	}
+	}*/
 
 }
 

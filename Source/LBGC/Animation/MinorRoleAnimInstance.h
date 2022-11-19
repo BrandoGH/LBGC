@@ -24,6 +24,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "RoleAnimInstance  Func")
 		void UpdateMinorRoleAnimationProperties(float fDeltaSeconds);
 
+protected:
+	virtual bool TraceCheckFootIK(EnFootIkTraceType type);
+
 private:
 	bool CheckMinorRole();
 

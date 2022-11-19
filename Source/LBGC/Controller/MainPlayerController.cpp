@@ -66,9 +66,9 @@ void AMainPlayerController::OnRoleInfoUpdateSC(const uint8* msg)
 		m_minorRole->SetJumping((sc->m_jumpFlag == MsgRoleInfoUpdateCS::EJF_JUMPING) ? true : false);
 	}
 
-	LBGC_INSTANCE->PrintDebugMessageOnScreen(0, 1000.f, FColor::Yellow,
+	/*LBGC_INSTANCE->PrintDebugMessageOnScreen(0, 1000.f, FColor::Yellow,
 		FString::Printf(TEXT("alter [%s] location to X[%04lf] Y[%04lf] Z[%04lf] m_velocity[%d] m_jumpFlag[%d]"),
-			*scRoleName, sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double, sc->m_velocity, sc->m_jumpFlag));
+			*scRoleName, sc->m_roleX.m_double, sc->m_roleY.m_double, sc->m_roleZ.m_double, sc->m_velocity, sc->m_jumpFlag));*/
 
 }
 
