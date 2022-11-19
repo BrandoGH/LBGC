@@ -25,6 +25,7 @@ class LBGC_API AStartupPlayerController : public APlayerController
 public:
 	AStartupPlayerController();
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaTime) override;
 
 public:
@@ -67,4 +68,5 @@ private:
 	class ULoginWidget* m_HUDLogin;
 	FMsgCallbackToExpectMsg m_dgLoginSC;
 
+	bool m_quieGame;
 };

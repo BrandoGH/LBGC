@@ -39,12 +39,16 @@ public:
 	FVector GetLocalRoleLocation();
 	class APlayerController* GetLocalRoleController();
 
+	class UStartupConfig* GetStartupConfig() { return m_cfgStartup; }
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "ULBGCGameInstance Func")
 		static ULBGCGameInstance* GetInstance();
 
 private:
+	void InitStartupConfig();
 	void DeleteTcpClient();
+	void DeleteStartupConfig();
 	void AyncLoadLevel(const FString& mapDir, const FString& mapName, const FAyncLoadLevelDelegate& dg);
 
 public:
@@ -58,6 +62,7 @@ private:
 	static ULBGCGameInstance* instance;
 
 	class UTcpClient* m_tcpClient;
+	class UStartupConfig* m_cfgStartup;
 
 	TMap<FString, AMinorRole*> m_mapRoleNameToMinorRoleModel;
 

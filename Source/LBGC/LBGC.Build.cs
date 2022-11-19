@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
+using System;
+using System.IO;
 
 public class LBGC : ModuleRules
 {
@@ -13,7 +15,11 @@ public class LBGC : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
         // macro
+        PublicDefinitions.Add("LBGS_CONFIG_DIR=FString::Printf(TEXT(\"%sLBGC/ConfigFile/\"),*FString(FPaths::ConvertRelativePathToFull(FPaths::GameSourceDir())))");
         PublicDefinitions.Add("LBGS_DEBUG=1");
+
+        // Package the game and add the configuration file to the game directory
+        RuntimeDependencies.Add(Path.Combine(ModuleDirectory, "ConfigFile", "server.xml"));
 
         // Uncomment if you are using Slate UI
         // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

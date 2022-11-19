@@ -1,0 +1,9 @@
+<config>
+	<gateserver>
+		<data>
+			<ip>127.0.0.1</ip>
+			<port>4510</port>
+			<heartbeat_interval_s>30</heartbeat_interval_s>
+		</data>
+	</gateserver>
+</config>

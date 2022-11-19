@@ -150,7 +150,7 @@ void AMainPlayerController::SyncMinorRoleInfo(float DeltaTime)
 		TargetRot.Pitch = CurRot.Pitch;
 		TargetRot.Roll = CurRot.Roll;
 
-		m_lastRotInterp = FMath::RInterpTo(CurRot, TargetRot, DeltaTime, 4.f);
+		m_lastRotInterp = FMath::RInterpTo(CurRot, TargetRot, DeltaTime, 5.f);
 		m_minorRole->SetActorRotation(m_lastRotInterp);
 	}
 

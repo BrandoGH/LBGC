@@ -8,6 +8,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include <UObject/UObjectGlobals.h>
 #include <Kismet/GameplayStatics.h>
 #include "Engine/Engine.h"
+#include "../ConfigModule/StartupConfig.h"
 
 namespace
 {
@@ -16,6 +17,7 @@ namespace
 void ULBGCGameInstance::Init()
 {
 	m_tcpClient = NULL;
+	InitStartupConfig();
 	SpawnLocalRole = LoadClass<AMainRole>(NULL, TEXT("Blueprint'/Game/LGGC_Game/Blueprint/Role/BP_MainRole.BP_MainRole_C'"));
 	SpawnRemoteRole = LoadClass<AMinorRole>(NULL, TEXT("BBlueprint'/Game/LGGC_Game/Blueprint/Role/BP_MinorRole.BP_MinorRole_C'"));
 }
@@ -23,6 +25,7 @@ void ULBGCGameInstance::Init()
 void ULBGCGameInstance::Shutdown()
 {
 	DeleteTcpClient();
+	DeleteStartupConfig();
 }
 
 UTcpClient* ULBGCGameInstance::GetTcpClient(int ClientSeq)
@@ -132,12 +135,27 @@ ULBGCGameInstance* ULBGCGameInstance::GetInstance()
 	return instance;
 }
 
+void ULBGCGameInstance::InitStartupConfig()
+{
+	m_cfgStartup = NewObject<UStartupConfig>();
+	m_cfgStartup->AddToRoot();
+}
+
 void ULBGCGameInstance::DeleteTcpClient()
 {
 	if (m_tcpClient)
 	{
 		m_tcpClient->RemoveFromRoot();
 		m_tcpClient = NULL;
+	}
+}
+
+void ULBGCGameInstance::DeleteStartupConfig()
+{
+	if (m_cfgStartup)
+	{
+		m_cfgStartup->RemoveFromRoot();
+		m_cfgStartup = NULL;
 	}
 }
 

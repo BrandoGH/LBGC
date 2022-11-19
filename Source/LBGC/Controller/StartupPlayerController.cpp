@@ -9,16 +9,13 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "../GameInstance/LBGCGameInstance.h"
 #include "../MsgModule/MsgCommon.h"
 #include "../MsgModule/Msg/MsgLogin.h"
+#include "../ConfigModule/StartupConfig.h"
 
-namespace
-{
-const FString g_strServerIp = "192.168.43.115";
-const uint16 g_nServerPort = 4510;
-}
 
 AStartupPlayerController::AStartupPlayerController()
 	: m_HUDStartup(NULL)
 	, m_HUDLogin(NULL)
+	, m_quieGame(false)
 {
 
 }
@@ -26,8 +23,15 @@ AStartupPlayerController::AStartupPlayerController()
 void AStartupPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+	m_quieGame = false;
 	InitFromBeginPlay();
 	ConnectToServer();
+}
+
+void AStartupPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	m_quieGame = true;
 }
 
 void AStartupPlayerController::Tick(float DeltaTime)
@@ -127,16 +131,28 @@ void AStartupPlayerController::ConnectToServer()
 	{
 		return;
 	}
-	
+
+	UTcpClient* client =  LBGC_INSTANCE->GetTcpClient();
+	UStartupConfig* config = LBGC_INSTANCE->GetStartupConfig();
+
+	if (!client || !config)
+	{
+		return;
+	}
 
 	FClientConnectDelegate cd;
 	cd.BindLambda(
 		[&](bool ok, const FString& info)
 		{
+			if (m_quieGame)
+			{
+				return;
+			}
 			if (m_HUDLogin)
 			{
 				m_HUDLogin->SetLoginButtonEnable(ok);
 			}
+
 			if (m_HUDStartup)
 			{
 				m_HUDStartup->SetTip(info);
@@ -153,10 +169,8 @@ void AStartupPlayerController::ConnectToServer()
 				OnConnectServerOk();
 			}
 		});
-	if (LBGC_INSTANCE->GetTcpClient())
-	{
-		LBGC_INSTANCE->GetTcpClient()->Connect(g_strServerIp, g_nServerPort, cd);
-	}
+
+	client->Connect(config->GetCfgIp(), config->GetCfgPort(), cd);
 }
 
 void AStartupPlayerController::OnConnectServerOk_Implementation()

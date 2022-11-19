@@ -13,6 +13,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "../GameInstance/LBGCGameInstance.h"
 #include "../MsgModule/CommonTool.h"
 #include "../MsgModule/Msg/MsgCreateRoleModel.h"
+#include "../ConfigModule/StartupConfig.h"
 
 UTcpClient::UTcpClient()
 	: m_pSocketClient(NULL)
@@ -111,7 +112,13 @@ void UTcpClient::StartRead()
 
 void UTcpClient::StartSendHeart()
 {
-	FAsyncTask<AyncTaskSender>* TaskSender = new FAsyncTask<AyncTaskSender>(30);
+	UStartupConfig* config = LBGC_INSTANCE->GetStartupConfig();
+	if (!config)
+	{
+		return;
+	}
+
+	FAsyncTask<AyncTaskSender>* TaskSender = new FAsyncTask<AyncTaskSender>(config->GetCfgHeartSec());
 	TaskSender->StartBackgroundTask();
 }
 
@@ -121,6 +128,13 @@ void UTcpClient::OnMsgRead(const TArray<uint8>& msg)
 	{
 		return;
 	}
+
+	UStartupConfig* config = LBGC_INSTANCE->GetStartupConfig();
+	if (!config)
+	{
+		return;
+	}
+
 	LBGC_INSTANCE->GetTimerManager().ClearTimer(m_timeoutHandle);
 	FTimerDelegate dgTimeout;
 	dgTimeout.BindLambda(
@@ -130,7 +144,7 @@ void UTcpClient::OnMsgRead(const TArray<uint8>& msg)
 			CloseSocket();
 		}
 	);
-	LBGC_INSTANCE->GetTimerManager().SetTimer(m_timeoutHandle, dgTimeout, 60, false);
+	LBGC_INSTANCE->GetTimerManager().SetTimer(m_timeoutHandle, dgTimeout, config->GetCfgHeartSec() * 2, false);
 
 
 	MsgHeader* header = (MsgHeader*)msg.GetData();
