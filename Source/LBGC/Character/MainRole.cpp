@@ -13,6 +13,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "../MsgModule/MsgCommon.h"
 #include "../MsgModule/Msg/MsgRoleInfoUpdate.h"
 #include "../Controller/MainPlayerController.h"
+#include <Kismet/GameplayStatics.h>
 
 namespace
 {
@@ -24,7 +25,7 @@ const FVector g_vecThirdView = FVector(0.f, 0.f, 63.f);
 const FVector g_vecMeshDefault = FVector(0.f, 0.f, -91.f);
 const FRotator g_rotMeshDefault = FRotator(0.f, -90.f, 0.f);
 const FVector g_vecSocketOffset = FVector(0.f, 90.f, 30.f);
-const FVector g_vecCameraLocDefault = FVector(4.f, -5.f, 19.f);
+const FVector g_vecCameraLocDefault = FVector(4.f, -5.f, 34.f);
 }
 
 AMainRole::AMainRole() 
@@ -87,6 +88,8 @@ void AMainRole::Tick(float DeltaTime)
 	{
 		m_bJumping = GetCharacterMovement()->IsFalling();
 	}
+
+	LimitControllerRotationAngle(33.f, 300.f);
 }
 
 void AMainRole::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -226,4 +229,23 @@ void AMainRole::OnJump()
 void AMainRole::OnStopJumping()
 {
 	Super::StopJumping();
+}
+
+void AMainRole::LimitControllerRotationAngle(float LookupAngle, float LookdownAngle)
+{
+	APlayerController* cc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (cc)
+	{
+		FRotator curRot = cc->GetControlRotation();
+		UE_LOG(LogTemp, Warning, TEXT("%s: curRot[%02f]"), *FString(__FUNCTION__), curRot.Pitch);
+		if (curRot.Pitch >= 0.f && curRot.Pitch <= 90.f)
+		{
+			curRot.Pitch = FMath::Clamp(curRot.Pitch, 0.f, LookupAngle);
+		}
+		else if (curRot.Pitch >= 270.f)
+		{
+			curRot.Pitch = FMath::Clamp(curRot.Pitch, LookdownAngle, 360.f);
+		}
+		cc->SetControlRotation(curRot);
+	}
 }

@@ -45,6 +45,8 @@ private:
 	void OnJump();
 	void OnStopJumping();
 
+	void LimitControllerRotationAngle(float LookupAngle, float LookdownAngle);
+
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AMainRole Var")
 		class USpringArmComponent* CompSpringArm;
