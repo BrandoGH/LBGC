@@ -237,7 +237,6 @@ void AMainRole::LimitControllerRotationAngle(float LookupAngle, float LookdownAn
 	if (cc)
 	{
 		FRotator curRot = cc->GetControlRotation();
-		UE_LOG(LogTemp, Warning, TEXT("%s: curRot[%02f]"), *FString(__FUNCTION__), curRot.Pitch);
 		if (curRot.Pitch >= 0.f && curRot.Pitch <= 90.f)
 		{
 			curRot.Pitch = FMath::Clamp(curRot.Pitch, 0.f, LookupAngle);
