@@ -62,14 +62,17 @@ void ARoleBase::CollisionPresets()
 	}
 	TEnumAsByte<enum ECanBeCharacterBase> BaseStepOn(ECanBeCharacterBase::ECB_Yes);
 	CompCapSule->CanCharacterStepUpOn = BaseStepOn;
-	CompCapSule->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
+	CompCapSule->SetCapsuleHalfHeight(95.f);
+	CompCapSule->SetCapsuleRadius(40.f);
 	// Collision preset
+	CompCapSule->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CompCapSule->SetCollisionObjectType(ECC_Pawn);
 	CompCapSule->SetCollisionResponseToAllChannels(ECR_Overlap);
-	CompCapSule->SetCollisionResponseToChannel(ECC_Camera, ECollisionResponse::ECR_Block);
 	CompCapSule->SetCollisionResponseToChannel(ECC_WorldStatic, ECollisionResponse::ECR_Block);
 	CompCapSule->SetCollisionResponseToChannel(ECC_WorldDynamic, ECollisionResponse::ECR_Block);
 	CompCapSule->SetCollisionResponseToChannel(ECC_PhysicsBody, ECollisionResponse::ECR_Block);
+	CompCapSule->SetCollisionResponseToChannel(ECC_Pawn, ECollisionResponse::ECR_Block);
+
 }
 
