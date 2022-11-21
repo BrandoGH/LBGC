@@ -247,9 +247,10 @@ void AStartupPlayerController::OnLoginSC(const uint8* msg)
 
 	if (sc->m_cLoginStatus == MsgLoginSC::LS_LOGIN_OK)
 	{
+		MsgLoginSC lambdaSC = *sc;
 		FAyncLoadLevelDelegate callback;
 		callback.BindLambda(
-			[&, sc](bool ok)
+			[&, lambdaSC](bool ok)
 			{
 				if (!ok)
 				{
@@ -264,7 +265,7 @@ void AStartupPlayerController::OnLoginSC(const uint8* msg)
 				AMainRole* role = LBGC_INSTANCE->GetLocalRole();
 				if (role)
 				{
-					role->SetRoleName(FString(strlen((const char*)sc->m_strRoleName), (const char*)sc->m_strRoleName));
+					role->SetRoleName(FString(strlen((const char*)lambdaSC.m_strRoleName), (const char*)lambdaSC.m_strRoleName));
 				}
 
 			}
