@@ -10,11 +10,13 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "../MsgModule/MsgCommon.h"
 #include "../MsgModule/Msg/MsgLogin.h"
 #include "../ConfigModule/StartupConfig.h"
+#include <Blueprint/UserWidget.h>
 
 
 AStartupPlayerController::AStartupPlayerController()
 	: m_HUDStartup(NULL)
 	, m_HUDLogin(NULL)
+	, m_HUDSetting(NULL)
 	, m_quieGame(false)
 {
 
@@ -55,6 +57,9 @@ void AStartupPlayerController::SwitchToView(EnSwitchHUD target)
 		break;
 	case EnSwitchHUD::ESH_LOGIN:
 		SwitchHUDToLogin();
+		break;
+	case EnSwitchHUD::ESH_SETTING:
+		SwitchHUDToSetting();
 		break;
 	}
 }
@@ -113,14 +118,20 @@ bool AStartupPlayerController::CheckRolePasswordSize()
 
 void AStartupPlayerController::InitFromBeginPlay()
 {
-	if (!HUDStartupClass || !HUDLoginClass)
+	if (!HUDStartupClass || !HUDLoginClass || !HUDSettingClass)
 	{
 		return;
 	}
 	m_HUDStartup = CreateWidget<UStartupWidget>(this, HUDStartupClass);
 	m_HUDStartup->AddToViewport();
+	m_HUDStartup->SetVisibility(ESlateVisibility::Visible);
 	m_HUDLogin = CreateWidget<ULoginWidget>(this, HUDLoginClass);
 	m_HUDLogin->AddToViewport();
+	m_HUDLogin->SetVisibility(ESlateVisibility::Visible);
+	m_HUDSetting = CreateWidget<UUserWidget>(this, HUDSettingClass);
+	m_HUDSetting->AddToViewport();
+	m_HUDSetting->SetVisibility(ESlateVisibility::Visible);
+
 	SwitchToView(EnSwitchHUD::ESH_STARTUP);
 	SetShowMouseCursor(true);
 }
@@ -191,29 +202,47 @@ void AStartupPlayerController::OnConnectServerOk_Implementation()
 void AStartupPlayerController::SwitchHUDToStartUp()
 {
 	if (!m_HUDStartup ||
-		!m_HUDLogin)
+		!m_HUDLogin ||
+		!m_HUDSetting)
 	{
 		return;
 	}
 
 	m_HUDStartup->SetVisibility(ESlateVisibility::Visible);
+	m_HUDSetting->SetVisibility(ESlateVisibility::Hidden);
 	m_HUDLogin->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void AStartupPlayerController::SwitchHUDToLogin()
 {
 	if (!m_HUDStartup ||
-		!m_HUDLogin)
+		!m_HUDLogin ||
+		!m_HUDSetting)
 	{
 		return;
 	}
 
 	m_HUDLogin->SetVisibility(ESlateVisibility::Visible);
+	m_HUDSetting->SetVisibility(ESlateVisibility::Hidden);
 	m_HUDStartup->SetVisibility(ESlateVisibility::Hidden);
 
 	m_HUDLogin->SetTip("");
 	m_HUDLogin->SetLoadingShow(false);
 
+}
+
+void AStartupPlayerController::SwitchHUDToSetting()
+{
+	if (!m_HUDStartup ||
+		!m_HUDLogin ||
+		!m_HUDSetting)
+	{
+		return;
+	}
+
+	m_HUDSetting->SetVisibility(ESlateVisibility::Visible);
+	m_HUDStartup->SetVisibility(ESlateVisibility::Hidden);
+	m_HUDLogin->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void AStartupPlayerController::SendLoginInfo()

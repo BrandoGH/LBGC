@@ -12,6 +12,7 @@ enum class EnSwitchHUD : uint8
 {
 	ESH_STARTUP,
 	ESH_LOGIN,
+	ESH_SETTING,
 };
 
 /**
@@ -52,6 +53,7 @@ private:
 	void ConnectToServer();
 	void SwitchHUDToStartUp();
 	void SwitchHUDToLogin();
+	void SwitchHUDToSetting();
 
 	void SendLoginInfo();
 	void OnLoginSC(const uint8* msg);
@@ -62,10 +64,13 @@ public:
 		TSubclassOf<UUserWidget> HUDStartupClass;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AStartupPlayerController Var")
 		TSubclassOf<UUserWidget> HUDLoginClass;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AStartupPlayerController Var")
+		TSubclassOf<UUserWidget> HUDSettingClass;
 
 private:
 	class UStartupWidget* m_HUDStartup;
 	class ULoginWidget* m_HUDLogin;
+	class UUserWidget* m_HUDSetting;
 	FMsgCallbackToExpectMsg m_dgLoginSC;
 
 	bool m_quieGame;
