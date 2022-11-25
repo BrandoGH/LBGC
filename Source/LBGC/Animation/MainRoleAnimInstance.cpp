@@ -150,7 +150,13 @@ bool UMainRoleAnimInstance::TraceCheckFootIK(EnFootIkTraceType type)
 
 	FHitResult hitResult;
 	bool bHit = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), VecStartLoc, VecEndLoc,
-		ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::ForOneFrame, hitResult, true);
+		ObjectTypes, false, ActorsToIgnore, 
+#ifdef LBGS_DEBUG
+		EDrawDebugTrace::ForOneFrame, 
+#else
+		EDrawDebugTrace::None,
+#endif
+		hitResult, true);
 
 	if (!bHit)
 	{
