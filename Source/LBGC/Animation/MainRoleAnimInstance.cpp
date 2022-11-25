@@ -23,6 +23,9 @@ UMainRoleAnimInstance::UMainRoleAnimInstance()
 	, IsJumping(false)
 	, m_fLFootGroundDistance(0.f)
 	, m_fRFootGroundDistance(0.f)
+	, LFootEffectorX(0.f)
+	, RFootEffectorX(0.f)
+	, PelvisZ(0.f)
 {
 }
 
