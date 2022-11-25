@@ -11,6 +11,7 @@ PRAGMA_DISABLE_OPTIMIZATION
 #include "../MsgModule/Msg/MsgLogin.h"
 #include "../ConfigModule/StartupConfig.h"
 #include <Blueprint/UserWidget.h>
+#include "../Widget/SettingWidget.h"
 
 
 AStartupPlayerController::AStartupPlayerController()
@@ -116,6 +117,16 @@ bool AStartupPlayerController::CheckRolePasswordSize()
 	return true;
 }
 
+void AStartupPlayerController::OnSwitchWindowsMode()
+{
+	if (!m_HUDSetting || !LBGC_INSTANCE)
+	{
+		return;
+	}
+
+	LBGC_INSTANCE->UserSettingSetFullscreenMode((EWindowMode::Type)m_HUDSetting->GetWindowsMode());
+}
+
 void AStartupPlayerController::InitFromBeginPlay()
 {
 	if (!HUDStartupClass || !HUDLoginClass || !HUDSettingClass)
@@ -124,13 +135,10 @@ void AStartupPlayerController::InitFromBeginPlay()
 	}
 	m_HUDStartup = CreateWidget<UStartupWidget>(this, HUDStartupClass);
 	m_HUDStartup->AddToViewport();
-	m_HUDStartup->SetVisibility(ESlateVisibility::Visible);
 	m_HUDLogin = CreateWidget<ULoginWidget>(this, HUDLoginClass);
 	m_HUDLogin->AddToViewport();
-	m_HUDLogin->SetVisibility(ESlateVisibility::Visible);
-	m_HUDSetting = CreateWidget<UUserWidget>(this, HUDSettingClass);
+	m_HUDSetting = CreateWidget<USettingWidget>(this, HUDSettingClass);
 	m_HUDSetting->AddToViewport();
-	m_HUDSetting->SetVisibility(ESlateVisibility::Visible);
 
 	SwitchToView(EnSwitchHUD::ESH_STARTUP);
 	SetShowMouseCursor(true);

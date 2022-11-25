@@ -135,6 +135,17 @@ ULBGCGameInstance* ULBGCGameInstance::GetInstance()
 	return instance;
 }
 
+void ULBGCGameInstance::UserSettingSetFullscreenMode(EWindowMode::Type type)
+{
+	if (!GEngine || !GEngine->GetGameUserSettings())
+	{
+		return;
+	}
+
+	GEngine->GetGameUserSettings()->SetFullscreenMode(type);
+	GEngine->GetGameUserSettings()->ApplyResolutionSettings(false);
+}
+
 void ULBGCGameInstance::InitStartupConfig()
 {
 	m_cfgStartup = NewObject<UStartupConfig>();

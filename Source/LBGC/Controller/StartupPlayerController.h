@@ -48,6 +48,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "AStartupPlayerController Func")
 		void OnConnectServerOk();
 
+	UFUNCTION(BlueprintCallable, Category = "AStartupPlayerController Func")
+		void OnSwitchWindowsMode();
+
 private:
 	void InitFromBeginPlay();
 	void ConnectToServer();
@@ -70,7 +73,7 @@ public:
 private:
 	class UStartupWidget* m_HUDStartup;
 	class ULoginWidget* m_HUDLogin;
-	class UUserWidget* m_HUDSetting;
+	class USettingWidget* m_HUDSetting;
 	FMsgCallbackToExpectMsg m_dgLoginSC;
 
 	bool m_quieGame;

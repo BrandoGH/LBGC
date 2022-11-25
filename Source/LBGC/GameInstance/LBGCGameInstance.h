@@ -7,6 +7,7 @@
 #include "../Character/MainRole.h"
 #include "../Character/MinorRole.h"
 #include <AIController.h>
+#include <GameFramework/GameUserSettings.h>
 #include "LBGCGameInstance.generated.h"
 
 DECLARE_DELEGATE_OneParam(FAyncLoadLevelDelegate, bool /*ok*/);
@@ -40,6 +41,9 @@ public:
 	class APlayerController* GetLocalRoleController();
 
 	class UStartupConfig* GetStartupConfig() { return m_cfgStartup; }
+
+	// User Setting
+	void UserSettingSetFullscreenMode(EWindowMode::Type type);
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "ULBGCGameInstance Func")
