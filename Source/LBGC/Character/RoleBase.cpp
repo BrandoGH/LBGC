@@ -60,7 +60,7 @@ void ARoleBase::CollisionPresets()
 	{
 		return;
 	}
-	TEnumAsByte<enum ECanBeCharacterBase> BaseStepOn(ECanBeCharacterBase::ECB_Yes);
+	TEnumAsByte<enum ECanBeCharacterBase> BaseStepOn(ECanBeCharacterBase::ECB_No);
 	CompCapSule->CanCharacterStepUpOn = BaseStepOn;
 
 	CompCapSule->SetCapsuleHalfHeight(95.f);
