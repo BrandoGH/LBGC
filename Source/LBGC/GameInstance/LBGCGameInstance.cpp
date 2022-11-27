@@ -135,6 +135,16 @@ ULBGCGameInstance* ULBGCGameInstance::GetInstance()
 	return instance;
 }
 
+void ULBGCGameInstance::ApplyUserSetting()
+{
+	if (!GEngine || !GEngine->GetGameUserSettings())
+	{
+		return;
+	}
+	GEngine->GetGameUserSettings()->ApplyResolutionSettings(false);		// windows ode
+	GEngine->GetGameUserSettings()->ApplySettings(true);
+}
+
 void ULBGCGameInstance::UserSettingSetFullscreenMode(EWindowMode::Type type)
 {
 	if (!GEngine || !GEngine->GetGameUserSettings())
@@ -143,7 +153,16 @@ void ULBGCGameInstance::UserSettingSetFullscreenMode(EWindowMode::Type type)
 	}
 
 	GEngine->GetGameUserSettings()->SetFullscreenMode(type);
-	GEngine->GetGameUserSettings()->ApplyResolutionSettings(false);
+}
+
+void ULBGCGameInstance::UserSettingSwitchVisualEffectQuality(int32 value)
+{
+	if (!GEngine || !GEngine->GetGameUserSettings())
+	{
+		return;
+	}
+
+	GEngine->GetGameUserSettings()->SetVisualEffectQuality(value);
 }
 
 void ULBGCGameInstance::InitStartupConfig()

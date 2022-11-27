@@ -44,10 +44,15 @@ public:
 
 	// User Setting
 	void UserSettingSetFullscreenMode(EWindowMode::Type type);
+	void UserSettingSwitchVisualEffectQuality(int32 value);
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "ULBGCGameInstance Func")
 		static ULBGCGameInstance* GetInstance();
+
+	// User Setting
+	UFUNCTION(BlueprintCallable, Category = "ULBGCGameInstance Func")
+	void ApplyUserSetting();
 
 private:
 	void InitStartupConfig();

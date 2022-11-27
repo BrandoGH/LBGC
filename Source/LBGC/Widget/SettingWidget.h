@@ -22,14 +22,26 @@ public:
 		Windowed,
 	};
 
+	enum EnEffectQueality
+	{
+		Low,
+		Medium,
+		High,
+		Epic,
+		Cinematic,
+	};
+
+
 public:
 	virtual bool Initialize() override;
 
 	int32 GetWindowsMode();
+	int32 GetEffectQuality();
 	
 private:
 	void DefaultSetting();
 
 private:
 	class UComboBoxString* m_combWindowsMode;
+	class UComboBoxString* m_combEffectQuality;
 };

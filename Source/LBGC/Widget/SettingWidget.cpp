@@ -12,6 +12,7 @@ bool USettingWidget::Initialize()
 	}
 
 	m_combWindowsMode = Cast<UComboBoxString>(GetWidgetFromName("ComboBoxWindowsMode"));
+	m_combEffectQuality = Cast<UComboBoxString>(GetWidgetFromName("ComboBoxEffectQuality"));
 
 	DefaultSetting();
 	return true;
@@ -24,6 +25,15 @@ int32 USettingWidget::GetWindowsMode()
 		return Fullscreen;
 	}
 	return m_combWindowsMode->GetSelectedIndex();
+}
+
+int32 USettingWidget::GetEffectQuality()
+{
+	if (!m_combWindowsMode)
+	{
+		return Medium;
+	}
+	return m_combEffectQuality->GetSelectedIndex();
 }
 
 void USettingWidget::DefaultSetting()

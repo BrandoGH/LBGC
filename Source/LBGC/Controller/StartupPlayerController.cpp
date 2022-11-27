@@ -127,6 +127,16 @@ void AStartupPlayerController::OnSwitchWindowsMode()
 	LBGC_INSTANCE->UserSettingSetFullscreenMode((EWindowMode::Type)m_HUDSetting->GetWindowsMode());
 }
 
+void AStartupPlayerController::OnSwitchVisualEffectQuality()
+{
+	if (!m_HUDSetting || !LBGC_INSTANCE)
+	{
+		return;
+	}
+
+	LBGC_INSTANCE->UserSettingSwitchVisualEffectQuality(m_HUDSetting->GetEffectQuality());
+}
+
 void AStartupPlayerController::InitFromBeginPlay()
 {
 	if (!HUDStartupClass || !HUDLoginClass || !HUDSettingClass)

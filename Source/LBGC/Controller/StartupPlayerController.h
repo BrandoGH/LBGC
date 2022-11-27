@@ -48,8 +48,12 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "AStartupPlayerController Func")
 		void OnConnectServerOk();
 
+	// User Setting
 	UFUNCTION(BlueprintCallable, Category = "AStartupPlayerController Func")
 		void OnSwitchWindowsMode();
+
+	UFUNCTION(BlueprintCallable, Category = "AStartupPlayerController Func")
+		void OnSwitchVisualEffectQuality();
 
 private:
 	void InitFromBeginPlay();
