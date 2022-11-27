@@ -141,7 +141,6 @@ void ULBGCGameInstance::ApplyUserSetting()
 	{
 		return;
 	}
-	GEngine->GetGameUserSettings()->ApplyResolutionSettings(false);		// windows ode
 	GEngine->GetGameUserSettings()->ApplySettings(true);
 }
 
@@ -153,6 +152,7 @@ void ULBGCGameInstance::UserSettingSetFullscreenMode(EWindowMode::Type type)
 	}
 
 	GEngine->GetGameUserSettings()->SetFullscreenMode(type);
+	GEngine->GetGameUserSettings()->ApplyResolutionSettings(false);		// windows mode
 }
 
 void ULBGCGameInstance::UserSettingSwitchVisualEffectQuality(int32 value)
